@@ -13,4 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register_gcm"
+        android:onClick="startGcmRegistrationActivity"
+        />
+
 </RelativeLayout>

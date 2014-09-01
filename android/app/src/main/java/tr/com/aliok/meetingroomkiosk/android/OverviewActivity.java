@@ -1,9 +1,11 @@
 package tr.com.aliok.meetingroomkiosk.android;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class OverviewActivity extends Activity {
@@ -32,5 +34,10 @@ public class OverviewActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void startGcmRegistrationActivity(View view) {
+        Intent intent = new Intent(this, GcmRegistrationActivity.class);
+        startActivity(intent);
     }
 }
