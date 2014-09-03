@@ -9,4 +9,24 @@
     <string name="clear">Clear</string>
     <string name="register_gcm">Register to GCM</string>
 
+    <string name="gcm_reg_id">GCM Registration ID</string>
+    <string name="reregister">Re-register</string>
+
+    <string name="server_username">Server username</string>
+    <string name="server_password">Server password</string>
+    <string name="save">Save</string>
+    <string name="room_id">Room ID</string>
+    <string name="server_url">Server URL</string>
+    <string name="serverUrlHint">Include protocol, hostname and port</string>
+    <string name="server_token">Server Token</string>
+    <string name="edit_server_info">Edit Server Information</string>
+    <string name="not_registered_to_gcm">Not registered to GCM. Navigating to settings.</string>
+    <string name="not_registered_to_server">Not registered to server. Navigating to settings.</string>
+    <string name="gcm_section_title">Google Cloud Messaging</string>
+    <string name="server_info_section_title">Server Information</string>
+    <string name="sensor_section_title">Sensor Information</string>
+    <string name="refresh">Refresh</string>
+    <string name="sensor_id">Sensor ID</string>
+    <string name="sensor_room_id">Sensor Room ID</string>
+
 </resources>
