@@ -1,26 +1,76 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Demo Html</title>
-    <link rel="stylesheet" type="text/css" href="demo.css"/>
+    <title>Minimum Setup</title>
+    <link rel="stylesheet"
+          href="http://bootstrap-calendar.azurewebsites.net/components/bootstrap3/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="http://bootstrap-calendar.azurewebsites.net/components/bootstrap3/css/bootstrap-theme.min.css">
 
-    <script type="text/javascript">
-        function hello(){
-                document.getElementById("asd").innerHTML = new Date();
-        }
-    </script>
-
+    <link rel="stylesheet" href="http://bootstrap-calendar.azurewebsites.net/css/calendar.css">
 </head>
 <body>
-<H1>Testing One Two Three</H1>
-<a onclick="hello();">CLICK HERE</a>
 
-<p>
-    <a href="file:///android_asset/html_no_copy/test.html">OR HERE</a>
+<div id="calendar"></div>
 
-<div id="asd"></div>
+<script type="text/javascript"
+        src="http://bootstrap-calendar.azurewebsites.net/components/jquery/jquery.min.js"></script>
+<script type="text/javascript"
+        src="http://bootstrap-calendar.azurewebsites.net/components/underscore/underscore-min.js"></script>
+<!--<script type="text/javascript"-->
+        <!--src="http://bootstrap-calendar.azurewebsites.net/components/bootstrap3/js/bootstrap.min.js"></script>-->
+<script type="text/javascript"
+        src="http://bootstrap-calendar.azurewebsites.net/components/jstimezonedetect/jstz.min.js"></script>
 
+
+<script type="text/javascript" src="http://bootstrap-calendar.azurewebsites.net/js/calendar.js"></script>
+
+<script type="text/javascript">
+    //    var calendar = $("#calendar").calendar(
+    //            {
+    //                tmpl_path: "/tmpls/",
+    //                events_source: function () {
+    //                    return [];
+    //                }
+    //            });
+</script>
+
+<script type="text/javascript">
+    var calendar = $('#calendar').calendar({
+        tmpl_path: "schedule-templates/",
+        view: 'day',
+        day: '2013-03-12',
+        first_day : '1',                    // 1 for monday, 2 for sunday
+        events_source: 'mock_events.json'
+//        onAfterEventsLoad: function (events) {
+//            if (!events) {
+//                return;
+//            }
+//            var list = $('#eventlist');
+//            list.html('');
+//
+//            $.each(events, function (key, val) {
+//                $(document.createElement('li'))
+//                        .html('<a href="' + val.url + '">' + val.title + '</a>')
+//                        .appendTo(list);
+//            });
+//        },
+//        onAfterViewLoad: function (view) {
+//            $('.page-header h3').text(this.getTitle());
+//            $('.btn-group button').removeClass('active');
+//            $('button[data-calendar-view="' + view + '"]').addClass('active');
+//        },
+//        classes: {
+//            months: {
+//                general: 'label'
+//            }
+//        }
+
+
+        // NAVIGATE : calendar.navigate($this.data('calendar-nav'));
+        // CHANGE VIEW : calendar.view($this.data('calendar-view'));
+
+    });
+</script>
 </body>
 </html>
