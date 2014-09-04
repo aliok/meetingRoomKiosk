@@ -12,20 +12,17 @@
 </head>
 <body>
 
-<script type="text/javascript" src="thirdparty/jquery-2.1.1.min.js"></script>
-<script type="text/javascript" src="thirdparty/bootstrap300.min.js"></script>
-
 <div id="header" style="display: block; width: 100%; border: 1px solid blue;">
     HEADER
 </div>
 
 <div id="dailyCalendarContainer" style="display: none;">
-    <div id="dailyCalendarHeader" class="row-fluid clearfix cal-row-head">
-        <div class="span1 col-xs-1 cal-cell" style="text-align: left; padding-left: 14px;">Time</div>
-        <div class="span11 col-xs-11 cal-cell">Events</div>
-    </div>
+<div id="dailyCalendarHeader" class="row-fluid clearfix cal-row-head">
+    <div class="span1 col-xs-1 cal-cell" style="text-align: left; padding-left: 14px;">Time</div>
+    <div class="span11 col-xs-11 cal-cell">Events</div>
+</div>
 
-    <div id="dailyCalendar" class="cal-context" style="width: 100%;">
+<div id="dailyCalendar" class="cal-context" style="width: 100%;">
     <div id="cal-day-box">
 
 
@@ -212,25 +209,34 @@
 
 
             <!--<div class="pull-left day-event day-highlight dh-event-warning" style="margin-top: 0px; height: 960px">-->
-                <!--<span class="cal-hours">10 Mar 19:00 - 19:01</span>-->
-                <!--<a href="http://www.example.com/" data-event-id="293" data-event-class="event-warning" class="event-item">-->
-                    <!--This is warning class event with very long title to check how it fits to evet in day view</a>-->
+            <!--<span class="cal-hours">10 Mar 19:00 - 19:01</span>-->
+            <!--<a href="http://www.example.com/" data-event-id="293" data-event-class="event-warning" class="event-item">-->
+            <!--This is warning class event with very long title to check how it fits to evet in day view</a>-->
             <!--</div>-->
         </div>
 
     </div>
-    </div>
+</div>
+</div>
 
+<div id="weeklyCalendarContainer" style="display: none;">
+    WEEKLY
 </div>
 
 <div id="footer" style="display: block; width: 100%; border: 1px solid blue;">
     FOOTER
 </div>
 
+<script type="text/javascript" src="thirdparty/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="thirdparty/bootstrap300.min.js"></script>
+<script type="text/javascript" src="thirdparty/date.js"></script>
+
 <script type="text/javascript" src="overview.js"></script>
 
 <script type="text/javascript">
-    new MeetingRoomKiosk().initializeDayView();
+    var meetingRoomKiosk = new MeetingRoomKiosk();
+    meetingRoomKiosk.initialize("DAY");
+    meetingRoomKiosk.fetchSchedule();
 </script>
 </body>
 </html>

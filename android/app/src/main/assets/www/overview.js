@@ -1,4 +1,37 @@
+var MeetingRoomKioskUtils = function () {
+    var self = this;
+
+    self.getToday00oclock = function () {
+        return Date.today();
+    };
+
+    self.formatDateLong = function (dateTime) {
+        return dateTime.toString("dddd, MMMM d yyyy");
+    };
+
+    self.formatTime = function (dateTime) {
+        return dateTime.toString("HH:mm");
+    };
+
+    self.formatTimeRange = function (startDateTime, endDateTime) {
+        return self.formatTime(startDateTime) + " - " + self.formatTime(endDateTime);
+    };
+
+    /**
+     * Converts "2012-10-30 10:30:22.111" to 10.5
+     * @param dateTime
+     */
+    self.getTimeInFloat = function (dateTime) {
+        var hours = dateTime.getHours();
+        var minutes = dateTime.getMinutes();
+
+        return hours + minutes / 60;
+    };
+};
+
 var MeetingRoomKiosk = function () {
+    var utils = new MeetingRoomKioskUtils();
+
     var heightOfHeader = 100;
     var heightOfFooter = 20;
     var heightOfViewPort = $(window).height();
@@ -17,11 +50,109 @@ var MeetingRoomKiosk = function () {
 
     var self = this;
 
-
-    self.initializeDayView = function () {
-        $('#dailyCalendarContainer').show();
+    // public method
+    self.initialize = function (initialView) {
+        $('#dailyCalendarContainer').hide();
         $('#weeklyCalendarContainer').hide();
 
+        initializeDayView();
+
+        if (initialView === 'DAY') {
+            $('#dailyCalendarContainer').show();
+
+            // offset from #calendar div
+            var offsetOf8Oclock = heightOfDayCalendarEachOur * (8 - dayStartHour);
+
+            $('#dailyCalendar').animate({scrollTop: offsetOf8Oclock}, 500);
+        }
+    };
+
+    // public method
+    self.fetchSchedule = function () {
+        var scheduleInfo =
+        {"periodSchedules": [
+            {
+                "period": {
+                    "startDateTime": 1409781600000,
+                    "endDateTime": 1409868000000,
+                    "periodType": "DAY"
+                },
+                "schedule": {
+                    "room": {
+                        "key": "ROOM1",
+                        "name": "Quartz B1.01"
+                    },
+                    "scheduleServerSyncTime": 1409857464875,
+                    "events": [
+                        {
+                            "eventKey": "ABC-DEF",
+                            "eventTitle": "Innbound Sprint Planning Meeting",
+                            "eventDescription": "Let's do it on 14:30 since Christoph is not available in the morning",
+                            "eventStart": 1409810400000,
+                            "eventEnd": 1409824800000,
+                            "allDayEvent": false,
+                            "organizer": {
+                                "firstName": "Ali",
+                                "lastName": "Ok",
+                                "email": "ali@example.com",
+                                "attendeeStatus": "ACCEPTED"
+                            },
+                            "attendees": [
+                                {
+                                    "firstName": "Ali",
+                                    "lastName": "Ok",
+                                    "email": "ali@example.com",
+                                    "attendeeStatus": "ACCEPTED"
+                                },
+                                {
+                                    "firstName": "Rene",
+                                    "lastName": "Gunther",
+                                    "email": "rene@example.com",
+                                    "attendeeStatus": "ACCEPTED"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ]};
+
+        function mockAsyncRequest(callback) {
+            callback(scheduleInfo);
+        }
+
+        mockAsyncRequest(function (scheduleInfo) {
+            var periodSchedules = scheduleInfo["periodSchedules"];
+
+            for (var i = 0; i < periodSchedules.length; i++) {
+                var periodSchedule = periodSchedules[i];
+                if (periodSchedule.period.periodType === "DAY") {
+                    var room = periodSchedule.schedule.room;
+                    var events = periodSchedule.schedule.events;
+
+                    if (events && events.length) {
+                        for (var j = 0; j < events.length; j++) {
+                            var event = events[j];
+                            var organizer = event.organizer;
+
+                            self.addDayEventOnUI(
+                                event.eventKey,
+                                new Date(event.eventStart),
+                                new Date(event.eventEnd),
+                                event.eventTitle,
+                                organizer.firstName + " " + organizer.lastName,
+                                "info"
+                            );
+                        }
+                    }
+                }
+            }
+
+        });
+
+    };
+
+    var initializeDayView = function () {
         $('#header').css('height', heightOfHeader);
         $('#footer').css('height', heightOfFooter);
 
@@ -30,36 +161,37 @@ var MeetingRoomKiosk = function () {
 
         $('#cal-day-box').find('.cal-day-hour-part').css('height', heightOfDayCalendarEachOurPart);
 
-        // offset from #calendar div
-        var offsetOf8Oclock = heightOfDayCalendarEachOur * (8 - dayStartHour);
-
-        $('#dailyCalendar').animate({scrollTop: offsetOf8Oclock}, 500);
-
 
         self.clearDayEvents();
-        self.addDayEvent(123, 8.5, 9.5, "Asdasd ads", "Ali Ok", "info");
-        self.addDayEvent(456, 6, 7, "Asdasd ads 2", "Rene Gunther", "error");
-        self.addDayEvent(789, 7, 8, "Asdasd ads 3 asdasdnkj adfihksjdnfm  aoijksdf,m  23ojilksdf", "Hidayet Turkoglu", "warning");
-        self.addDayEvent(789, 12, 17, "Asdasd ads 3 asdasdnkj adfihksjdnfm  aoijksdf,m  23ojilksdf", "Hidayet Turkoglu", "success");
+//        self.addDayEventOnUI(123,
+//            Date.today().set({minute: 45, hour: 10, day: 15, month: 6, year: 2008}),
+//            Date.today().set({minute: 0, hour: 12, day: 15, month: 6, year: 2008}),
+//            "Asdasd ads", "Ali Ok", "info");
+
+//        self.addDayEventOnUI(789, 7, 8, "Asdasd ads 3 asdasdnkj adfihksjdnfm  aoijksdf,m  23ojilksdf", "Hidayet Turkoglu", "warning");
+//        self.addDayEventOnUI(789, 12, 17, "Asdasd ads 3 asdasdnkj adfihksjdnfm  aoijksdf,m  23ojilksdf", "Hidayet Turkoglu", "success");
     };
 
     self.clearDayEvents = function () {
         $('#dailyCalendar').find('.day-event').remove();
     };
 
-    self.addDayEvent = function (eventId, startHour, endHour, title, organizer, type) {
-        var hours = "10:00 - 10:30";  //TODO
+    self.addDayEventOnUI = function (eventKey, startDateTime, endDateTime, title, organizer, type) {
+        var startHour = utils.getTimeInFloat(startDateTime);
+        var endHour = utils.getTimeInFloat(endDateTime);
+
+        var hours = utils.formatTimeRange(startDateTime, endDateTime);
         var marginTop = (startHour - dayStartHour) * heightOfDayCalendarEachOur;
         var height = (endHour - startHour) * heightOfDayCalendarEachOur;
 
         var eventDiv = "<div class='pull-left day-event day-highlight dh-event-" + type + "' style='margin-top: " + marginTop + "px; height: " + height + "px'>" +
             " <span class='cal-hours'>" + hours + "</span>" +
-            " <a data-event-id='" + eventId + "' data-event-class='event-" + type + "' class='event-item'>" +
+            " <a data-event-key='" + eventKey + "' data-event-class='event-" + type + "' class='event-item'>" +
             organizer + "<br/>" +
             title + "</a>" +
             "</div>";
 
         $('#cal-day-panel').append(eventDiv);
-    }
+    };
 
 };

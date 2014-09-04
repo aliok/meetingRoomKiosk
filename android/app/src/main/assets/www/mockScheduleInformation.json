@@ -1,0 +1,46 @@
+{"periodSchedules": [
+    {
+        "period": {
+            "startDateTime": 1409781600000,
+            "endDateTime": 1409868000000,
+            "periodType": "DAY"
+        },
+        "schedule": {
+            "room": {
+                "key": "ROOM1",
+                "name": "Quartz B1.01"
+            },
+            "scheduleServerSyncTime": 1409857464875,
+            "events": [
+                {
+                    "eventKey": "ABC-DEF",
+                    "eventTitle": "Innbound Sprint Planning Meeting",
+                    "eventDescription": "Let's do it on 14:30 since Christoph is not available in the morning",
+                    "eventStart": 1409810400000,
+                    "eventEnd": 1409824800000,
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]}
