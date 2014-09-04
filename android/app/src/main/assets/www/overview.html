@@ -1,76 +1,236 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minimum Setup</title>
-    <link rel="stylesheet"
-          href="http://bootstrap-calendar.azurewebsites.net/components/bootstrap3/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="http://bootstrap-calendar.azurewebsites.net/components/bootstrap3/css/bootstrap-theme.min.css">
+    <title>Meeting Room Kiosk</title>
 
-    <link rel="stylesheet" href="http://bootstrap-calendar.azurewebsites.net/css/calendar.css">
+    <link rel="stylesheet" href="thirdparty/bootstrap300.min.css">
+    <link rel="stylesheet" href="thirdparty/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="thirdparty/calendar.css">
+
+    <link rel="stylesheet" href="overview.css">
+
 </head>
 <body>
 
-<div id="calendar"></div>
+<script type="text/javascript" src="thirdparty/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="thirdparty/bootstrap300.min.js"></script>
 
-<script type="text/javascript"
-        src="http://bootstrap-calendar.azurewebsites.net/components/jquery/jquery.min.js"></script>
-<script type="text/javascript"
-        src="http://bootstrap-calendar.azurewebsites.net/components/underscore/underscore-min.js"></script>
-<!--<script type="text/javascript"-->
-        <!--src="http://bootstrap-calendar.azurewebsites.net/components/bootstrap3/js/bootstrap.min.js"></script>-->
-<script type="text/javascript"
-        src="http://bootstrap-calendar.azurewebsites.net/components/jstimezonedetect/jstz.min.js"></script>
+<div id="header" style="display: block; width: 100%; border: 1px solid blue;">
+    HEADER
+</div>
+
+<div id="dailyCalendarContainer" style="display: none;">
+    <div id="dailyCalendarHeader" class="row-fluid clearfix cal-row-head">
+        <div class="span1 col-xs-1 cal-cell" style="text-align: left; padding-left: 14px;">Time</div>
+        <div class="span11 col-xs-11 cal-cell">Events</div>
+    </div>
+
+    <div id="dailyCalendar" class="cal-context" style="width: 100%;">
+    <div id="cal-day-box">
 
 
-<script type="text/javascript" src="http://bootstrap-calendar.azurewebsites.net/js/calendar.js"></script>
+        <div id="cal-day-panel" class="clearfix">
+            <div id="cal-day-panel-hour">
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>06:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>06:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>07:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>07:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>08:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>08:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>09:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>09:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>10:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>10:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>11:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>11:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>12:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>12:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>13:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>13:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>14:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>14:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>15:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>15:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>16:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>16:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>17:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>17:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>18:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>18:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>19:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>19:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>20:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>20:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+                <div class="cal-day-hour">
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>21:00</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                    <div class="row-fluid cal-day-hour-part">
+                        <div class="span1 col-xs-1"><b>21:30</b></div>
+                        <div class="span11 col-xs-11"></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!--<div class="pull-left day-event day-highlight dh-event-warning" style="margin-top: 0px; height: 960px">-->
+                <!--<span class="cal-hours">10 Mar 19:00 - 19:01</span>-->
+                <!--<a href="http://www.example.com/" data-event-id="293" data-event-class="event-warning" class="event-item">-->
+                    <!--This is warning class event with very long title to check how it fits to evet in day view</a>-->
+            <!--</div>-->
+        </div>
+
+    </div>
+    </div>
+
+</div>
+
+<div id="footer" style="display: block; width: 100%; border: 1px solid blue;">
+    FOOTER
+</div>
+
+<script type="text/javascript" src="overview.js"></script>
 
 <script type="text/javascript">
-    //    var calendar = $("#calendar").calendar(
-    //            {
-    //                tmpl_path: "/tmpls/",
-    //                events_source: function () {
-    //                    return [];
-    //                }
-    //            });
-</script>
-
-<script type="text/javascript">
-    var calendar = $('#calendar').calendar({
-        tmpl_path: "schedule-templates/",
-        view: 'day',
-        day: '2013-03-12',
-        first_day : '1',                    // 1 for monday, 2 for sunday
-        events_source: 'mock_events.json'
-//        onAfterEventsLoad: function (events) {
-//            if (!events) {
-//                return;
-//            }
-//            var list = $('#eventlist');
-//            list.html('');
-//
-//            $.each(events, function (key, val) {
-//                $(document.createElement('li'))
-//                        .html('<a href="' + val.url + '">' + val.title + '</a>')
-//                        .appendTo(list);
-//            });
-//        },
-//        onAfterViewLoad: function (view) {
-//            $('.page-header h3').text(this.getTitle());
-//            $('.btn-group button').removeClass('active');
-//            $('button[data-calendar-view="' + view + '"]').addClass('active');
-//        },
-//        classes: {
-//            months: {
-//                general: 'label'
-//            }
-//        }
-
-
-        // NAVIGATE : calendar.navigate($this.data('calendar-nav'));
-        // CHANGE VIEW : calendar.view($this.data('calendar-view'));
-
-    });
+    new MeetingRoomKiosk().initializeDayView();
 </script>
 </body>
 </html>
