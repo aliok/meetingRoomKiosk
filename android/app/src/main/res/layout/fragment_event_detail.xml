@@ -1,0 +1,165 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    tools:context=".EventDetailFragment">
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/timeRangeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:text="10:30 - 11:00"
+        android:textSize="20sp"
+        flatui:fl_theme="@array/sea" />
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/timeRangeTextView"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/timeRangeTextView"
+        android:text="Innbound Sprint Planning Meeting"
+        android:textSize="30sp"
+        flatui:fl_theme="@array/sea" />
+
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleTextView"
+        android:layout_marginTop="10dp"
+        android:text="Let's do it on 14:30 since Christoph is not available in the morning"
+        flatui:fl_theme="@array/grape" />
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/organizerLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descriptionTextView"
+        android:layout_marginTop="20dp"
+        android:text="Organizer"
+        android:textSize="20sp" />
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/organizerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/organizerLabelTextView"
+        android:layout_marginLeft="30dp"
+        android:text="Ali Ok [aliok@apache.org]"
+        android:textSize="20sp"
+        flatui:fl_theme="@array/sea" />
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/attendeesLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/organizerTextView"
+        android:text="Attendees"
+        android:textSize="20sp" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/attendeesLabelTextView"
+        android:columnCount="3"
+        android:orientation="vertical"
+        android:paddingEnd="0dp"
+        android:paddingStart="30dp"
+        android:useDefaultMargins="true">
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:text="Sara Lindenmann"
+            android:textSize="20sp"
+            flatui:fl_theme="@array/sea" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:text="[sara@apache.org]"
+            android:textSize="15sp"
+            flatui:fl_theme="@array/sea" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="0"
+            android:text="(Accepted)"
+            android:textSize="20sp"
+            flatui:fl_textColor="darker"
+            flatui:fl_theme="@array/grass" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:text="Rene Gunther"
+            android:textSize="20sp"
+            flatui:fl_theme="@array/sea" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:text="[rene@apache.org]"
+            android:textSize="15sp"
+            flatui:fl_theme="@array/sea" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:text="(Optional)"
+            android:textSize="20sp"
+            flatui:fl_textColor="darker"
+            flatui:fl_theme="@array/sand" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:text="Chris Pfranger"
+            android:textSize="20sp"
+            flatui:fl_theme="@array/sea" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:text="[chris@apache.org]"
+            android:textSize="15sp"
+            flatui:fl_theme="@array/sea" />
+
+        <com.cengalabs.flatui.views.FlatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:text="(Rejected)"
+            android:textSize="20sp"
+            flatui:fl_textColor="darker"
+            flatui:fl_theme="@array/blood" />
+
+
+    </GridLayout>
+
+</RelativeLayout>

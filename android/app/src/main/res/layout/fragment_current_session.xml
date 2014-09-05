@@ -1,0 +1,80 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start|top"
+    android:orientation="vertical"
+    tools:context="tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment">
+
+    <!--<TextView-->
+    <!--android:visibility="gone"-->
+    <!--/>-->
+
+    <!--hide by default-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start|top"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:orientation="horizontal">
+
+            <com.cengalabs.flatui.views.FlatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="@string/session_in_progress"
+                android:textSize="40sp"
+                flatui:fl_backgroundColor="fl_main"
+                flatui:fl_textColor="darker" />
+
+            <!--TODO: this should count down!-->
+            <com.cengalabs.flatui.views.FlatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="1:45:29"
+                android:textSize="40sp"
+                flatui:fl_textColor="darker" />
+
+            <tr.com.aliok.meetingroomkiosk.android.components.BlinkingTextView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/on_air"
+                android:textColor="@android:color/white"
+                android:textSize="40sp"
+                flatui:fl_backgroundColor="fl_main"
+                flatui:fl_theme="@array/blood" />
+        </LinearLayout>
+
+        <fragment
+            android:id="@+id/currentEventDetailFragment"
+            android:name="tr.com.aliok.meetingroomkiosk.android.fragments.EventDetailFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <!--hide by default-->
+    <com.cengalabs.flatui.views.FlatTextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_session_in_progress"
+        android:textSize="40sp"
+        android:visibility="gone"
+        flatui:fl_backgroundColor="fl_main"
+        flatui:fl_textColor="darker"
+        flatui:fl_theme="@array/blood" />
+
+
+</LinearLayout>

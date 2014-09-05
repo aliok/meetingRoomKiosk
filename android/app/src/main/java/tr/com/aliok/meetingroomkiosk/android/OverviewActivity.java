@@ -1,29 +1,36 @@
 package tr.com.aliok.meetingroomkiosk.android;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.ActionBar;
 import android.content.Intent;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.cengalabs.flatui.FlatUI;
+
+import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
+import tr.com.aliok.meetingroomkiosk.android.fragments.DayCalendarFragment;
+import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
+import tr.com.aliok.meetingroomkiosk.android.util.FontsOverride;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 
-import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
 
+public class OverviewActivity extends FragmentActivity implements
+        DayCalendarFragment.OnFragmentInteractionListener,
+        CurrentSessionFragment.OnFragmentInteractionListener,
+        WeekCalendarFragment.OnFragmentInteractionListener {
 
-public class OverviewActivity extends Activity {
-
-    private WebView mWebView;
+    private ViewPager mViewPager;
 
     //TODO check internet connection on resume
+
+    private static final int DEFAULT_THEME = FlatUI.GRASS;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -31,16 +38,83 @@ public class OverviewActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
+        // Converts the default values (radius, size, border) to dp to be compatible with different
+        // screen sizes. If you skip this there may be problem with different screen densities
+        FlatUI.initDefaultValues(this);
+
+        // Setting default theme to avoid to add the attribute "theme" to XML
+        // and to be able to change the whole theme at once
+        FlatUI.setDefaultTheme(DEFAULT_THEME);
+//        FlatUI.setDefaultTheme(R.array.my_custom_theme);    // for using custom theme as default
+
+        // Getting action bar drawable and setting it.
+        // Sometimes weird problems may occur while changing action bar drawable at runtime.
+        // You can try to set title of the action bar to invalidate it after setting background.
+        getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, DEFAULT_THEME, false));
+
         // Check device for Play Services APK.
         CommonUtils.checkPlayServices(this);
 
-        mWebView = (WebView) findViewById(R.id.webview);
-        WebSettings webSettings = mWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        FontsOverride.setDefaultFont(this, "DEFAULT", "opensans_regular.ttf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "opensans_regular.ttf");
+//        FontsOverride.setDefaultFont(this, "SANS_SERIF", "MyFontAsset3.ttf");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+        // ViewPager and its adapters use support library
+        // fragments, so use getSupportFragmentManager.
+        final OverviewPagerAdapter overviewPagerAdapter = new OverviewPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(overviewPagerAdapter);
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+                // When the tab is selected, switch to the
+                // corresponding page in the ViewPager.
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+                // do nothing
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
+                // do nothing
+            }
+        };
+
+        // setup action bar for tabs
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        ActionBar.Tab tab = actionBar.newTab()
+                .setText(R.string.current_session)
+                .setTabListener(tabListener);
+        actionBar.addTab(tab);
+
+        tab = actionBar.newTab()
+                .setText(R.string.day_overview)
+                .setTabListener(tabListener);
+        actionBar.addTab(tab);
+
+        tab = actionBar.newTab()
+                .setText(R.string.week_overview)
+                .setTabListener(tabListener);
+        actionBar.addTab(tab);
+
+
+        mViewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        // When swiping between pages, select the
+                        // corresponding tab.
+                        getActionBar().setSelectedNavigationItem(position);
+                    }
+                });
+
     }
 
     @Override
@@ -59,7 +133,26 @@ public class OverviewActivity extends Activity {
             return;
         }
 
-        refreshWebView();
+        refreshOverview();
+    }
+
+    @Override
+    public void onDayCalendarFragmentInteraction(Uri uri) {
+        //TODO
+    }
+
+    @Override
+    public void onCurrentSessionFragmentInteraction(Uri uri) {
+        //TODO
+    }
+
+    @Override
+    public void onWeekCalendarFragmentInteraction(Uri uri) {
+        //TODO
+    }
+
+    private void refreshOverview() {
+        //TODO
     }
 
     private boolean checkSensor() {
@@ -83,34 +176,6 @@ public class OverviewActivity extends Activity {
         }
 
         return true;
-    }
-
-    private void refreshWebView() {
-        mWebView.loadUrl("file:///android_asset/www/overview.html");
-
-        // we cannot call a JS function from the page shown in WebView until the page is loaded.
-        // thus, use progress listener to make sure page is loaded
-        // then call the JS code
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            private boolean pageInitialized = false;
-
-            @Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                if (!pageInitialized && newProgress == 100) {
-                    Log.i(TAG, "Initializing page");
-
-                    // do the JS call in a new thread instead of blocking the current UI thread
-                    mWebView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mWebView.loadUrl("javascript:hello()");
-                        }
-                    });
-
-                    pageInitialized = true;
-                }
-            }
-        });
     }
 
     @Override
