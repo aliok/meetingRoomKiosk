@@ -3,7 +3,6 @@ package tr.com.aliok.meetingroomkiosk.android;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -14,15 +13,14 @@ import android.widget.Toast;
 import com.cengalabs.flatui.FlatUI;
 
 import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
-import tr.com.aliok.meetingroomkiosk.android.fragments.DayCalendarFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
+import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
-import tr.com.aliok.meetingroomkiosk.android.util.FontsOverride;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 
 
 public class OverviewActivity extends FragmentActivity implements
-        DayCalendarFragment.OnFragmentInteractionListener,
         CurrentSessionFragment.OnFragmentInteractionListener,
         WeekCalendarFragment.OnFragmentInteractionListener {
 
@@ -45,7 +43,6 @@ public class OverviewActivity extends FragmentActivity implements
         // Setting default theme to avoid to add the attribute "theme" to XML
         // and to be able to change the whole theme at once
         FlatUI.setDefaultTheme(DEFAULT_THEME);
-//        FlatUI.setDefaultTheme(R.array.my_custom_theme);    // for using custom theme as default
 
         // Getting action bar drawable and setting it.
         // Sometimes weird problems may occur while changing action bar drawable at runtime.
@@ -55,9 +52,10 @@ public class OverviewActivity extends FragmentActivity implements
         // Check device for Play Services APK.
         CommonUtils.checkPlayServices(this);
 
-        FontsOverride.setDefaultFont(this, "DEFAULT", "opensans_regular.ttf");
-        FontsOverride.setDefaultFont(this, "MONOSPACE", "opensans_regular.ttf");
-//        FontsOverride.setDefaultFont(this, "SANS_SERIF", "MyFontAsset3.ttf");
+        // override application fonts (typefaces)
+        AppUtils.setDefaultFont(this, "DEFAULT", "opensans_regular.ttf");
+        AppUtils.setDefaultFont(this, "MONOSPACE", "opensans_regular.ttf");
+        AppUtils.setDefaultFont(this, "SANS_SERIF", "opensans_regular.ttf");
 
         // ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
@@ -65,6 +63,7 @@ public class OverviewActivity extends FragmentActivity implements
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(overviewPagerAdapter);
 
+        // on tab change, update viewPager so that it shows the correct page
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
@@ -89,13 +88,9 @@ public class OverviewActivity extends FragmentActivity implements
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
 
+        // add tabs
         ActionBar.Tab tab = actionBar.newTab()
                 .setText(R.string.current_session)
-                .setTabListener(tabListener);
-        actionBar.addTab(tab);
-
-        tab = actionBar.newTab()
-                .setText(R.string.day_overview)
                 .setTabListener(tabListener);
         actionBar.addTab(tab);
 
@@ -104,7 +99,7 @@ public class OverviewActivity extends FragmentActivity implements
                 .setTabListener(tabListener);
         actionBar.addTab(tab);
 
-
+        // similar to above, update the selected tab when current page is changed
         mViewPager.setOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
@@ -115,8 +110,8 @@ public class OverviewActivity extends FragmentActivity implements
                     }
                 });
 
-        mViewPager.setCurrentItem(2);
-
+        // set initial view
+        mViewPager.setCurrentItem(1);
     }
 
     @Override
@@ -139,22 +134,13 @@ public class OverviewActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onDayCalendarFragmentInteraction(Uri uri) {
-        //TODO
-    }
-
-    @Override
-    public void onCurrentSessionFragmentInteraction(Uri uri) {
-        //TODO
-    }
-
-    @Override
-    public void onWeekCalendarFragmentInteraction(Uri uri) {
-        //TODO
+    public void onEventSelected(Event event) {
+        // TODO : display event details in a dialog
     }
 
     private void refreshOverview() {
         //TODO
+        // fetch the data from the server and update all fragments
     }
 
     private boolean checkSensor() {
@@ -162,6 +148,11 @@ public class OverviewActivity extends FragmentActivity implements
         return true;
     }
 
+    /**
+     * Check if required tokens are there.
+     *
+     * @return true iff both GCM and server tokens are there
+     */
     private boolean checkTokens() {
         final String gcmRegistrationId = SharedPrefsUtils.getGcmRegistrationId(getApplication());
         if (gcmRegistrationId.isEmpty()) {
@@ -200,7 +191,7 @@ public class OverviewActivity extends FragmentActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    public void goToSettings() {
+    private void goToSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }

@@ -7,8 +7,10 @@ import android.view.animation.Animation;
 
 import com.cengalabs.flatui.views.FlatTextView;
 
+/**
+ * A flat blinking text view for catching attraction.
+ */
 public class BlinkingTextView extends FlatTextView {
-
 
     public BlinkingTextView(Context context) {
         super(context);

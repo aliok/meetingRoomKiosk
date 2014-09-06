@@ -2,7 +2,6 @@ package tr.com.aliok.meetingroomkiosk.android.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -24,11 +23,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
+import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
 
-
+/**
+ * A fragment to show a weekly calendar.
+ * <p/>
+ * Use newInstance method to initialize it.
+ */
 public class WeekCalendarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
     private WeekCalendarMetrics mWeekCalendarMetrics;
 
     private RelativeLayout mTimeColumn;
@@ -65,14 +70,11 @@ public class WeekCalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View fragmentRoot = inflater.inflate(R.layout.fragment_week_calendar, container, false);
-
-        mTimeColumn = (RelativeLayout) fragmentRoot.findViewById(R.id.timeColumn);
-
         final WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        mWeekCalendarMetrics = new WeekCalendarMetrics(fragmentRoot, windowManager);
 
+        // bind components
+        mTimeColumn = (RelativeLayout) fragmentRoot.findViewById(R.id.timeColumn);
         mTimeColumnHeaderTextView = (TextView) fragmentRoot.findViewById(R.id.timeColumnHeaderTextView);
-
         mDayColumHeaders = Lists.transform(this.dayColumnHeaderIds, new Function<Integer, FlatTextView>() {
             @Override
             public FlatTextView apply(Integer input) {
@@ -80,15 +82,22 @@ public class WeekCalendarFragment extends Fragment {
             }
         });
 
+        // create other fields
+        mWeekCalendarMetrics = new WeekCalendarMetrics(fragmentRoot, windowManager);
+
+
         createHourColumn();
 
         adjustDayColumnHeadersStyles();
+
+
 
         return fragmentRoot;
     }
 
     private void adjustDayColumnHeadersStyles() {
         for (FlatTextView columnHeader : mDayColumHeaders) {
+            // adjust day column header heights with the defined one in metrics
             columnHeader.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mWeekCalendarMetrics.heightOfHeader));
         }
     }
@@ -186,8 +195,7 @@ public class WeekCalendarFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) activity;
 
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -197,26 +205,15 @@ public class WeekCalendarFragment extends Fragment {
         mListener = null;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onWeekCalendarFragmentInteraction(uri);
-        }
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
      * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onWeekCalendarFragmentInteraction(Uri uri);
+        public void onEventSelected(Event event);
     }
 
 }
