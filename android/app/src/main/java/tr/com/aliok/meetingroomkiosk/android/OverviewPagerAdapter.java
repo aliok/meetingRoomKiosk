@@ -19,7 +19,7 @@ public class OverviewPagerAdapter extends FragmentPagerAdapter {
 
         this.mCurrentSessionFragment = CurrentSessionFragment.newInstance(null, null);
         this.mDayCalendarFragment = DayCalendarFragment.newInstance(null, null);
-        this.mWeekCalendarFragment = WeekCalendarFragment.newInstance(null, null);
+        this.mWeekCalendarFragment = WeekCalendarFragment.newInstance();
     }
 
 

@@ -115,6 +115,8 @@ public class OverviewActivity extends FragmentActivity implements
                     }
                 });
 
+        mViewPager.setCurrentItem(2);
+
     }
 
     @Override
