@@ -14,7 +14,9 @@ import com.cengalabs.flatui.FlatUI;
 
 import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
+import tr.com.aliok.meetingroomkiosk.android.restclient.ScheduleServiceClient;
 import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.restclient.model.Schedule;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
@@ -24,11 +26,16 @@ public class OverviewActivity extends FragmentActivity implements
         CurrentSessionFragment.OnFragmentInteractionListener,
         WeekCalendarFragment.OnFragmentInteractionListener {
 
+    private static final int DEFAULT_THEME = FlatUI.GRASS;
+
     private ViewPager mViewPager;
 
-    //TODO check internet connection on resume
+    // ------------ data ------------------//
+    private Event currentEvent;
+    private Event upcomingEvents;
+    private Schedule schedule;
 
-    private static final int DEFAULT_THEME = FlatUI.GRASS;
+    //TODO check internet connection on resume
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -47,6 +54,7 @@ public class OverviewActivity extends FragmentActivity implements
         // Getting action bar drawable and setting it.
         // Sometimes weird problems may occur while changing action bar drawable at runtime.
         // You can try to set title of the action bar to invalidate it after setting background.
+        //noinspection ConstantConditions
         getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(this, DEFAULT_THEME, false));
 
         // Check device for Play Services APK.
@@ -59,12 +67,12 @@ public class OverviewActivity extends FragmentActivity implements
 
         // ViewPager and its adapters use support library
         // fragments, so use getSupportFragmentManager.
-        final OverviewPagerAdapter overviewPagerAdapter = new OverviewPagerAdapter(getSupportFragmentManager());
+        final OverviewPagerAdapter overviewPagerAdapter = new OverviewPagerAdapter(this, getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(overviewPagerAdapter);
 
         // on tab change, update viewPager so that it shows the correct page
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+        final ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             @Override
             public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction fragmentTransaction) {
                 // When the tab is selected, switch to the
@@ -141,6 +149,9 @@ public class OverviewActivity extends FragmentActivity implements
     private void refreshOverview() {
         //TODO
         // fetch the data from the server and update all fragments
+        this.schedule = new ScheduleServiceClient().fetchSchedule();
+        this.upcomingEvents = this.schedule.getEvents().get(0);
+        this.currentEvent = this.schedule.getEvents().get(0);
     }
 
     private boolean checkSensor() {
@@ -194,5 +205,17 @@ public class OverviewActivity extends FragmentActivity implements
     private void goToSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public Event getUpcomingEvents() {
+        return upcomingEvents;
+    }
+
+    public Event getCurrentEvent() {
+        return currentEvent;
     }
 }

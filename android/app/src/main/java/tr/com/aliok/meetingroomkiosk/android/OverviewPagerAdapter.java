@@ -9,26 +9,21 @@ import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
 
 public class OverviewPagerAdapter extends FragmentPagerAdapter {
 
-    private CurrentSessionFragment mCurrentSessionFragment;
-    private WeekCalendarFragment mWeekCalendarFragment;
-
-    public OverviewPagerAdapter(FragmentManager fm) {
+    public OverviewPagerAdapter(OverviewActivity overviewActivity, FragmentManager fm) {
         super(fm);
-
-        // TODO : is creating them in advance good?
-
-        this.mCurrentSessionFragment = CurrentSessionFragment.newInstance();
-        this.mWeekCalendarFragment = WeekCalendarFragment.newInstance();
     }
-
 
     @Override
     public Fragment getItem(int position) {
+        // do not cache instances of the fragments:
+        // see http://stackoverflow.com/questions/6976027/reusing-fragments-in-a-fragmentpageradapter
+        // and http://stackoverflow.com/questions/9727173/support-fragmentpageradapter-holds-reference-to-old-fragments
+
         switch (position) {
             case 0:
-                return mCurrentSessionFragment;
+                return CurrentSessionFragment.newInstance();
             case 1:
-                return mWeekCalendarFragment;
+                return WeekCalendarFragment.newInstance();
         }
 
         throw new IllegalStateException();
@@ -36,6 +31,6 @@ public class OverviewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 }

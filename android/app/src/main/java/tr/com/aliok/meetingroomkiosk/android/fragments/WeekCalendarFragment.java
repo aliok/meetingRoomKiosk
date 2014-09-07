@@ -36,8 +36,11 @@ public class WeekCalendarFragment extends Fragment {
 
     private WeekCalendarMetrics mWeekCalendarMetrics;
 
+    // ------ component bindings -----------------
     private RelativeLayout mTimeColumn;
     private TextView mTimeColumnHeaderTextView;
+    private List<FlatTextView> mDayColumHeaders;
+
 
     private final List<Integer> dayColumnHeaderIds = Arrays.asList(
             R.id.day0ColumnHeader,
@@ -46,8 +49,6 @@ public class WeekCalendarFragment extends Fragment {
             R.id.day3ColumnHeader,
             R.id.day4ColumnHeader
     );
-
-    private List<FlatTextView> mDayColumHeaders;
 
     public static WeekCalendarFragment newInstance() {
         WeekCalendarFragment fragment = new WeekCalendarFragment();
@@ -85,12 +86,9 @@ public class WeekCalendarFragment extends Fragment {
         // create other fields
         mWeekCalendarMetrics = new WeekCalendarMetrics(fragmentRoot, windowManager);
 
-
+        // initialize the fragment
         createHourColumn();
-
         adjustDayColumnHeadersStyles();
-
-
 
         return fragmentRoot;
     }
@@ -144,6 +142,34 @@ public class WeekCalendarFragment extends Fragment {
         return textView;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     */
+    public interface OnFragmentInteractionListener {
+        public void onEventSelected(Event event);
+    }
+
     private static class WeekCalendarMetrics {
         private static final int HEIGHT_OF_HEADER_IN_DP = 30;         // in dp units
         private static final int HEIGHT_OF_EACH_HOUR_IN_DP = 45;      // in dp units
@@ -186,34 +212,6 @@ public class WeekCalendarFragment extends Fragment {
             sizeOfHourText = (float) (heightOfEachHourPart - (HEIGHT_OF_EACH_HOUR_IN_DP / 2) * 0.1 * density);
         }
 
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     */
-    public interface OnFragmentInteractionListener {
-        public void onEventSelected(Event event);
     }
 
 }
