@@ -1,25 +1,30 @@
 package tr.com.aliok.meetingroomkiosk.server.model;
 
+import tr.com.aliok.meetingroomkiosk.model.api.ScheduleModel;
+
 import java.util.Date;
 import java.util.List;
 
 /**
  * @author Ali Ok (ali.ok@apache.org)
  */
-public class Schedule {
+public class Schedule implements ScheduleModel {
 
     private Room room;
     private Date scheduleServerSyncTime;
     private List<Event> events;
 
+    @Override
     public Room getRoom() {
         return room;
     }
 
+    @Override
     public Date getScheduleServerSyncTime() {
         return scheduleServerSyncTime;
     }
 
+    @Override
     public List<Event> getEvents() {
         return events;
     }

@@ -1,4 +1,4 @@
-package tr.com.aliok.meetingroomkiosk.server.model;
+package tr.com.aliok.meetingroomkiosk.model.api;
 
 /**
  * @author Ali Ok (ali.ok@apache.org)

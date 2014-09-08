@@ -1,6 +1,8 @@
 package tr.com.aliok.meetingroomkiosk.server.rest;
 
 import org.apache.commons.lang3.time.DateUtils;
+import tr.com.aliok.meetingroomkiosk.model.api.AttendeeStatus;
+import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
 import tr.com.aliok.meetingroomkiosk.server.model.*;
 
 import java.util.Arrays;
