@@ -23,12 +23,38 @@ public class DateTimeUtils {
         return hours + (minutes / 60.f);
     }
 
+    /**
+     * Returns "22:00 - 23:00" for params "2014-02-09 22:00" and "2017-12-31 23:00"
+     *
+     * @param startDate range start
+     * @param endDate   range end
+     * @return range str
+     */
     public static String getTimeRangeStr(Date startDate, Date endDate) {
         return getTimeStr(startDate) + " - " + getTimeStr(endDate);
     }
 
+    /**
+     * Returns "22:00" for param "2014-02-09 22:00"
+     *
+     * @param date the datetime
+     * @return time str
+     */
     public static String getTimeStr(Date date) {
         return HOUR_DATE_FORMAT.format(date);
     }
+
+    /**
+     * Returns "2014-02-09 00:00" for param "2014-02-09 22:00"
+     *
+     * @param date the datetime
+     * @return 00:00 of that day
+     */
+    public Date getDayStart(Date date) {
+        return DateUtils.truncate(date, Calendar.DAY_OF_MONTH);
+    }
+
+
+
 
 }

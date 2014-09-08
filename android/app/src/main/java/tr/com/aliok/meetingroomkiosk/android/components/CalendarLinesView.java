@@ -12,6 +12,12 @@ import android.widget.RelativeLayout;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
 
+/**
+ * Draws the lines for the calendar view.
+ * <p/>
+ * It draws a horizontal line for each hour and a vertical line for each day.
+ * This view should be added behind the events, so that it doesn't go over the events.
+ */
 public class CalendarLinesView extends RelativeLayout {
 
     private static final int NUMBER_OF_DAY_COLUMNS = 5;
