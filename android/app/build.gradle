@@ -19,8 +19,15 @@ android {
     }
 }
 
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'tr.com.aliok:meetingRoomKiosk-model-api:1.0-SNAPSHOT'
 
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile 'com.google.android.gms:play-services:5.0+'
