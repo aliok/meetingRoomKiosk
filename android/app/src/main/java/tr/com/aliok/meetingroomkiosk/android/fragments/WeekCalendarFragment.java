@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cengalabs.flatui.FlatUI;
+import com.cengalabs.flatui.views.FlatButton;
 import com.cengalabs.flatui.views.FlatTextView;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -23,7 +25,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
+import tr.com.aliok.meetingroomkiosk.android.restclient.ScheduleServiceClient;
 import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.util.DateTimeUtils;
 
 /**
  * A fragment to show a weekly calendar.
@@ -32,6 +36,22 @@ import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
  */
 public class WeekCalendarFragment extends Fragment {
 
+    // ------ component ids to be used in bindings -----------------
+    private final static List<Integer> DAY_COLUMN_IDS = Arrays.asList(
+            R.id.day0Column,
+            R.id.day1Column,
+            R.id.day2Column,
+            R.id.day3Column,
+            R.id.day4Column
+    );
+    private final static List<Integer> DAY_COLUMN_HEADER_IDS = Arrays.asList(
+            R.id.day0ColumnHeader,
+            R.id.day1ColumnHeader,
+            R.id.day2ColumnHeader,
+            R.id.day3ColumnHeader,
+            R.id.day4ColumnHeader
+    );
+
     private OnFragmentInteractionListener mListener;
 
     private WeekCalendarMetrics mWeekCalendarMetrics;
@@ -39,16 +59,8 @@ public class WeekCalendarFragment extends Fragment {
     // ------ component bindings -----------------
     private RelativeLayout mTimeColumn;
     private TextView mTimeColumnHeaderTextView;
+    private List<RelativeLayout> mDayColumns;
     private List<FlatTextView> mDayColumHeaders;
-
-
-    private final List<Integer> dayColumnHeaderIds = Arrays.asList(
-            R.id.day0ColumnHeader,
-            R.id.day1ColumnHeader,
-            R.id.day2ColumnHeader,
-            R.id.day3ColumnHeader,
-            R.id.day4ColumnHeader
-    );
 
     public static WeekCalendarFragment newInstance() {
         WeekCalendarFragment fragment = new WeekCalendarFragment();
@@ -62,42 +74,76 @@ public class WeekCalendarFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View fragmentRoot = inflater.inflate(R.layout.fragment_week_calendar, container, false);
         final WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
 
+
+        bindComponents(fragmentRoot);
+        createFields(fragmentRoot, windowManager);
+
+        // initialize fragment view with empty data
+//        createLines();
+        createHourColumn();
+        adjustDayColumnHeadersStyles();
+
+        addEvent(new ScheduleServiceClient().fetchSchedule().getEvents().get(0));
+        addEvent(new ScheduleServiceClient().fetchSchedule().getEvents().get(1));
+
+        return fragmentRoot;
+    }
+
+    private void addEvent(Event event) {
+        final FlatButton flatButton = new FlatButton(getActivity());
+
+        flatButton.getAttributes().setTheme(FlatUI.GRASS, getResources());
+        flatButton.getAttributes().setBorderWidth(0);
+        // set it like that since that depends already on height of each hour
+        flatButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, mWeekCalendarMetrics.sizeOfEventTitleText);
+
+        flatButton.onThemeChange();
+
+        flatButton.setPadding(0, 0, 0, 0);
+        flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventDescription());
+
+        final float eventStartHourInFloat = DateTimeUtils.getHourInFloat(event.getEventStart());
+        final float eventEndHourInFloat = DateTimeUtils.getHourInFloat(event.getEventEnd());
+
+        final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                Math.round((eventEndHourInFloat - eventStartHourInFloat) * mWeekCalendarMetrics.heightOfEachHour)
+        );
+        params.leftMargin = 0;
+        params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (eventStartHourInFloat - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader);
+
+        mDayColumns.get(0).addView(flatButton, params);
+    }
+
+    private void bindComponents(final View fragmentRoot) {
         // bind components
         mTimeColumn = (RelativeLayout) fragmentRoot.findViewById(R.id.timeColumn);
+
         mTimeColumnHeaderTextView = (TextView) fragmentRoot.findViewById(R.id.timeColumnHeaderTextView);
-        mDayColumHeaders = Lists.transform(this.dayColumnHeaderIds, new Function<Integer, FlatTextView>() {
+
+        mDayColumHeaders = Lists.transform(DAY_COLUMN_HEADER_IDS, new Function<Integer, FlatTextView>() {
             @Override
             public FlatTextView apply(Integer input) {
                 return (FlatTextView) fragmentRoot.findViewById(input);
             }
         });
 
-        // create other fields
-        mWeekCalendarMetrics = new WeekCalendarMetrics(fragmentRoot, windowManager);
-
-        // initialize the fragment
-        createHourColumn();
-        adjustDayColumnHeadersStyles();
-
-        return fragmentRoot;
+        mDayColumns = Lists.transform(DAY_COLUMN_IDS, new Function<Integer, RelativeLayout>() {
+            @Override
+            public RelativeLayout apply(Integer input) {
+                return (RelativeLayout) fragmentRoot.findViewById(input);
+            }
+        });
     }
 
-    private void adjustDayColumnHeadersStyles() {
-        for (FlatTextView columnHeader : mDayColumHeaders) {
-            // adjust day column header heights with the defined one in metrics
-            columnHeader.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mWeekCalendarMetrics.heightOfHeader));
-        }
+    private void createFields(View fragmentRoot, WindowManager windowManager) {
+        // create other fields
+        mWeekCalendarMetrics = new WeekCalendarMetrics(fragmentRoot, windowManager);
     }
 
     private void createHourColumn() {
@@ -110,10 +156,13 @@ public class WeekCalendarFragment extends Fragment {
                 final FlatTextView textView = createHourLabelTextView();
 
                 textView.setText(String.format("%02d:00", i));
+                textView.setIncludeFontPadding(false);
+                textView.setGravity(Gravity.TOP);
+                textView.setPadding(0, -(int) (mWeekCalendarMetrics.heightOfEachHour*0.05),0,0);
 
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWeekCalendarMetrics.widthOfTimeColumn, Math.round(mWeekCalendarMetrics.heightOfEachHourPart));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWeekCalendarMetrics.widthOfTimeColumn, mWeekCalendarMetrics.heightOfEachHourPart);
                 params.leftMargin = 0;
-                params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (i - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader);
+                params.topMargin = mWeekCalendarMetrics.heightOfEachHour * (i - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader;
 
                 mTimeColumn.addView(textView, params);
             }
@@ -121,13 +170,23 @@ public class WeekCalendarFragment extends Fragment {
                 final FlatTextView textView = createHourLabelTextView();
 
                 textView.setText(String.format("%02d:30", i));
+                textView.setIncludeFontPadding(false);
+                textView.setGravity(Gravity.TOP);
+                textView.setPadding(0, -(int) (mWeekCalendarMetrics.heightOfEachHour*0.05),0,0);
 
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWeekCalendarMetrics.widthOfTimeColumn, Math.round(mWeekCalendarMetrics.heightOfEachHourPart));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWeekCalendarMetrics.widthOfTimeColumn, mWeekCalendarMetrics.heightOfEachHourPart);
                 params.leftMargin = 0;
-                params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (i - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfEachHourPart + mWeekCalendarMetrics.heightOfHeader);
+                params.topMargin = mWeekCalendarMetrics.heightOfEachHour * (i - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfEachHourPart + mWeekCalendarMetrics.heightOfHeader;
 
                 mTimeColumn.addView(textView, params);
             }
+        }
+    }
+
+    private void adjustDayColumnHeadersStyles() {
+        for (FlatTextView columnHeader : mDayColumHeaders) {
+            // adjust day column header heights with the defined one in metrics
+            columnHeader.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mWeekCalendarMetrics.heightOfHeader));
         }
     }
 
@@ -136,7 +195,7 @@ public class WeekCalendarFragment extends Fragment {
 
         textView.getAttributes().setTheme(FlatUI.SEA, getResources());
         textView.getAttributes().setBorderWidth(0);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.round(mWeekCalendarMetrics.sizeOfHourText));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mWeekCalendarMetrics.sizeOfHourText);
 
         textView.onThemeChange();       // need to trigger this one to make sure FlatTextView reads attributes set!
         return textView;
@@ -170,46 +229,39 @@ public class WeekCalendarFragment extends Fragment {
         public void onEventSelected(Event event);
     }
 
-    private static class WeekCalendarMetrics {
-        private static final int HEIGHT_OF_HEADER_IN_DP = 30;         // in dp units
-        private static final int HEIGHT_OF_EACH_HOUR_IN_DP = 45;      // in dp units
+    private class WeekCalendarMetrics {
+        private final int HEIGHT_OF_HEADER_IN_DP = getResources().getInteger(R.integer.week_calendar_height_of_header_in_dp);         // in dp units
+        private final int HEIGHT_OF_EACH_HOUR_PART_IN_DP = getResources().getInteger(R.integer.week_calendar_height_of_each_hour_part_in_dp);      // in dp units
 
-        private static final int WIDTH_OF_TIME_COLUMN_IN_DP = 70;     // in dp units
+        private final int WIDTH_OF_TIME_COLUMN_IN_DP = getResources().getInteger(R.integer.week_calendar_width_of_time_column_in_dp);     // in dp units
 
-        private static final int DAY_START_HOUR = 7;
-        private static final int DAY_END_HOUR = 19;
-
-        // 8:00 - 18:00 will be shown by default. I mean scroll of calendar will be set like that
-        private static final int INITIAL_HOURS_TO_SHOW_ON_CALENDAR = 18 - 8;
-
+        private final int DAY_START_HOUR = getResources().getInteger(R.integer.week_calendar_day_start_hour);
+        private final int DAY_END_HOUR = getResources().getInteger(R.integer.week_calendar_day_end_hour);
 
         // now real pixel values
         private int heightOfHeader;
-        private float heightOfEachHour;
-        private float heightOfEachHourPart;
+        private int heightOfEachHour;
+        private int heightOfEachHourPart;
 
         private int widthOfTimeColumn;
 
-        private float offsetOf8Oclock;
-
-        private float sizeOfHourText;
-
-        private DisplayMetrics displayMetrics = new DisplayMetrics();
+        private int sizeOfHourText;
+        private int sizeOfEventTitleText;
 
         private WeekCalendarMetrics(View fragmentView, WindowManager windowManager) {
+            final DisplayMetrics displayMetrics = new DisplayMetrics();
             windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-            float density = displayMetrics.density;
 
-            heightOfHeader = Math.round(HEIGHT_OF_HEADER_IN_DP * density);
-            heightOfEachHour = HEIGHT_OF_EACH_HOUR_IN_DP * density;             // do not round these as alignment will be broken
-            heightOfEachHourPart = heightOfEachHour / 2;                        // do not round these as alignment will be broken
+            heightOfHeader = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_OF_HEADER_IN_DP, displayMetrics));
+            heightOfEachHourPart = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, HEIGHT_OF_EACH_HOUR_PART_IN_DP, displayMetrics));
+            heightOfEachHour = heightOfEachHourPart * 2;
 
-            widthOfTimeColumn = Math.round(WIDTH_OF_TIME_COLUMN_IN_DP * density);
-
-            offsetOf8Oclock = heightOfEachHour * (8 - DAY_START_HOUR);
+            widthOfTimeColumn = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, WIDTH_OF_TIME_COLUMN_IN_DP, displayMetrics));
 
             // %90 of each hourPart
-            sizeOfHourText = (float) (heightOfEachHourPart - (HEIGHT_OF_EACH_HOUR_IN_DP / 2) * 0.1 * density);
+            sizeOfHourText = Math.round(heightOfEachHourPart * 0.9f);
+
+            sizeOfEventTitleText = Math.round(sizeOfHourText * 0.7f);
         }
 
     }

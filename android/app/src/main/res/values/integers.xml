@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="calendar_lines_view_stroke_width">2</integer>
+    <integer name="blinking_text_animation_duration">1000</integer>
+    <integer name="blinking_text_animation_offset">100</integer>
+    <integer name="week_calendar_height_of_header_in_dp">30</integer>
+    <integer name="week_calendar_height_of_each_hour_part_in_dp">25</integer>
+    <integer name="week_calendar_width_of_time_column_in_dp">70</integer>
+    <integer name="week_calendar_day_start_hour">7</integer>
+    <integer name="week_calendar_day_end_hour">19</integer>
+</resources>
