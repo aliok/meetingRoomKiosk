@@ -3,9 +3,15 @@ package tr.com.aliok.meetingroomkiosk.android.restclient.model;
 import java.util.Date;
 import java.util.List;
 
-public class Event {
+import tr.com.aliok.meetingroomkiosk.model.api.EventModel;
 
-    private Long eventId;
+/**
+ * @author Ali Ok (ali.ok@apache.org)
+ */
+public class Event implements EventModel {
+
+    private String eventKey;
+    private String eventTitle;
     private String eventDescription;
     private Date eventStart;
     private Date eventEnd;
@@ -13,90 +19,44 @@ public class Event {
     private Attendee organizer;
     private List<Attendee> attendees;
 
-    public Long getEventId() {
-        return eventId;
+    @Override
+    public String getEventKey() {
+        return eventKey;
     }
 
+    @Override
+    public String getEventTitle() {
+        return eventTitle;
+    }
+
+    @Override
     public String getEventDescription() {
         return eventDescription;
     }
 
+    @Override
     public Date getEventStart() {
         return eventStart;
     }
 
+    @Override
     public Date getEventEnd() {
         return eventEnd;
     }
 
+    @Override
     public boolean isAllDayEvent() {
         return allDayEvent;
     }
 
+    @Override
     public Attendee getOrganizer() {
         return organizer;
     }
 
+    @Override
     public List<Attendee> getAttendees() {
         return attendees;
     }
 
-    public static class EventBuilder {
-        private Long eventId;
-        private String eventDescription;
-        private Date eventStart;
-        private Date eventEnd;
-        private boolean allDayEvent;
-        private Attendee organizer;
-        private List<Attendee> attendees;
-
-        public EventBuilder setEventId(Long eventId) {
-            this.eventId = eventId;
-            return this;
-        }
-
-        public EventBuilder setEventDescription(String eventDescription) {
-            this.eventDescription = eventDescription;
-            return this;
-        }
-
-        public EventBuilder setEventStart(Date eventStart) {
-            this.eventStart = eventStart;
-            return this;
-        }
-
-        public EventBuilder setEventEnd(Date eventEnd) {
-            this.eventEnd = eventEnd;
-            return this;
-        }
-
-        public EventBuilder setAllDayEvent(boolean allDayEvent) {
-            this.allDayEvent = allDayEvent;
-            return this;
-        }
-
-        public EventBuilder setOrganizer(Attendee organizer) {
-            this.organizer = organizer;
-            return this;
-        }
-
-        public EventBuilder setAttendees(List<Attendee> attendees) {
-            this.attendees = attendees;
-            return this;
-        }
-
-        public Event createEvent() {
-            final Event event = new Event();
-
-            event.eventId = this.eventId;
-            event.eventDescription = this.eventDescription;
-            event.eventStart = this.eventStart;
-            event.eventEnd = this.eventEnd;
-            event.allDayEvent = this.allDayEvent;
-            event.organizer = this.organizer;
-            event.attendees = this.attendees;
-
-            return event;
-        }
-    }
 }

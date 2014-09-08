@@ -16,7 +16,6 @@ import java.io.IOException;
 
 import tr.com.aliok.meetingroomkiosk.android.restclient.RegistrationServiceClient;
 import tr.com.aliok.meetingroomkiosk.android.restclient.model.DisplayInformation;
-import tr.com.aliok.meetingroomkiosk.android.restclient.model.SensorInformation;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 

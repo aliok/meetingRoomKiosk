@@ -26,7 +26,6 @@ import java.util.List;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.restclient.ScheduleServiceClient;
-import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
 import tr.com.aliok.meetingroomkiosk.android.util.DateTimeUtils;
 
 /**

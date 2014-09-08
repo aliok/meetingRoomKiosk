@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
-import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
 
 /**
  * Fragment for displaying current session tab. It includes detail for current session (or next session)

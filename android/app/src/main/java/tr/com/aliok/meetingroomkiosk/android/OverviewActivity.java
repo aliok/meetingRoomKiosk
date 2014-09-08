@@ -15,8 +15,6 @@ import com.cengalabs.flatui.FlatUI;
 import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
 import tr.com.aliok.meetingroomkiosk.android.restclient.ScheduleServiceClient;
-import tr.com.aliok.meetingroomkiosk.android.restclient.model.Event;
-import tr.com.aliok.meetingroomkiosk.android.restclient.model.Schedule;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
