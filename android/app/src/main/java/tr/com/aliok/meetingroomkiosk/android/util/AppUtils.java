@@ -3,9 +3,19 @@ package tr.com.aliok.meetingroomkiosk.android.util;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.util.Log;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+
+import tr.com.aliok.meetingroomkiosk.android.Constants;
 
 public class AppUtils {
 
@@ -43,6 +53,34 @@ public class AppUtils {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Read asset and return its content.
+     *
+     * @param assetManager manager that allows us to access the resource
+     * @param filePath     without the prefix "assets"
+     * @return Content of the asset
+     */
+    public static String readCharAsset(AssetManager assetManager, String filePath) {
+        // see http://stackoverflow.com/questions/9674815/trouble-with-reading-file-from-assets-folder-in-android
+
+        InputStreamReader inputStreamReader = null;
+        try {
+            final BufferedInputStream inputStream = new BufferedInputStream(assetManager.open("mock_rest/getSchedule.json"));
+            inputStreamReader = new InputStreamReader(inputStream, Charsets.UTF_8.name());
+            return CharStreams.toString(inputStreamReader);
+        } catch (IOException e) {
+            Log.e(Constants.TAG, "Unable to read asset :" + filePath, e);
+            return null;
+        } finally {
+            if (inputStreamReader != null)
+                try {
+                    inputStreamReader.close();
+                } catch (IOException e) {
+                    Log.e(Constants.TAG, "Cannot close stream reader for asset :" + filePath, e);
+                }
         }
     }
 

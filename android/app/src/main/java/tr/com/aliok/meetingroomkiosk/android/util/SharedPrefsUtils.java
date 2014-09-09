@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import tr.com.aliok.meetingroomkiosk.android.Constants;
+
 public class SharedPrefsUtils {
 
     public static final String PROPERTY_GCM_REG_ID = "gcm_registration_id";
     public static final String PROPERTY_SERVER_TOKEN = "server_token";
     public static final String PROPERTY_ROOM_ID = "room_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final String PROPERTY_SERVER_END_POINT = "serverBaseUrl";
 
     private static final String TAG = "MeetingRoomKiosk";
 
@@ -94,5 +97,15 @@ public class SharedPrefsUtils {
             return "";
         }
         return roomId;
+    }
+
+    /**
+     * Finds saved server end point. If not saved yet, returns default one, which is http://localhost:8080/
+     * @param application app to get the saved property
+     * @return server end point
+     */
+    public static String getServerEndpoint(Application application) {
+        final SharedPreferences prefs = getSharedPreferences(application.getApplicationContext());
+        return prefs.getString(PROPERTY_SERVER_END_POINT, Constants.DEFAULT_SERVER_END_POINT);
     }
 }
