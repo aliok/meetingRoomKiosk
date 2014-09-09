@@ -16,4 +16,7 @@ public class Constants {
 
     public static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
+    public static final String DEFAULT_SERVER_END_POINT = "http://localhost:8080/";
+
+    public static final boolean MOCK_DATA = true;
 }
