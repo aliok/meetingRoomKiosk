@@ -1,8 +1,8 @@
 {"periodSchedules": [
     {
         "period": {
-            "startDateTime": 1410213600000,
-            "endDateTime": 1410300000000,
+            "startDateTime": "2014-09-09T22:00:00Z",
+            "endDateTime": "2014-09-10T22:00:00Z",
             "periodType": "DAY"
         },
         "schedule": {
@@ -10,14 +10,14 @@
                 "key": "ROOM1",
                 "name": "Quartz B1.01"
             },
-            "scheduleServerSyncTime": 1410275325444,
+            "scheduleServerSyncTime": "2014-09-09T23:16:30Z",
             "events": [
                 {
                     "eventKey": "ABC-DEF",
                     "eventTitle": "Innbound Sprint Planning Meeting",
                     "eventDescription": "Let's do it on 14:30 since Christoph is not available in the morning",
-                    "eventStart": 1410242400000,
-                    "eventEnd": 1410256800000,
+                    "eventStart": "2014-09-10T06:00:00Z",
+                    "eventEnd": "2014-09-10T10:00:00Z",
                     "allDayEvent": false,
                     "organizer": {
                         "firstName": "Ali",
