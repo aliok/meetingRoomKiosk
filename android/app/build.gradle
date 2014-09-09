@@ -34,4 +34,5 @@ dependencies {
     compile 'com.github.eluleci:flatui:2.1.1'
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.google.guava:guava:18.0'
+    compile 'com.squareup.retrofit:retrofit:1.6.1'
 }
