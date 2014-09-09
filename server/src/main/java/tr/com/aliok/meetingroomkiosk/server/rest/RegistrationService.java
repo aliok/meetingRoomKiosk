@@ -1,6 +1,7 @@
 package tr.com.aliok.meetingroomkiosk.server.rest;
 
 import org.apache.commons.lang3.Validate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,13 @@ import tr.com.aliok.meetingroomkiosk.server.model.Sensor;
 @RestController
 public class RegistrationService {
 
+    @Autowired
     DisplayManager displayManager;
+
+    @Autowired
     SensorManager sensorManager;
+
+    @Autowired
     RoomManager roomManager;
 
     @RequestMapping("/registerDisplay")
