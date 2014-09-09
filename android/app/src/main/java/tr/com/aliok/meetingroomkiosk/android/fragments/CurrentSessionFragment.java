@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import tr.com.aliok.meetingroomkiosk.android.OverviewActivity;
 import tr.com.aliok.meetingroomkiosk.android.R;
+import tr.com.aliok.meetingroomkiosk.android.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
 
 /**
  * Fragment for displaying current session tab. It includes detail for current session (or next session)
@@ -63,6 +66,14 @@ public class CurrentSessionFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void dataArrived() {
+        //TODO
+        final OverviewActivity overviewActivity = (OverviewActivity) getActivity();
+
+        final ScheduleInformation scheduleInformation = overviewActivity.getScheduleInformation();
+        System.out.println(scheduleInformation);
     }
 
     /**

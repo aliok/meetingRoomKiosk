@@ -14,8 +14,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
-import tr.com.aliok.meetingroomkiosk.android.restclient.RegistrationServiceClient;
-import tr.com.aliok.meetingroomkiosk.android.restclient.model.DisplayInformation;
+import tr.com.aliok.meetingroomkiosk.android.model.Display;
+import tr.com.aliok.meetingroomkiosk.android.model.Sensor;
+import tr.com.aliok.meetingroomkiosk.android.service.ServiceContext;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 
@@ -24,7 +25,7 @@ import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
 public class SettingsActivity extends Activity {
 
     // ---- Services ----------------------- //
-    private RegistrationServiceClient registrationServiceClient;
+    private ServiceContext serviceContext;
     private GoogleCloudMessaging gcm;
 
     // ---- GCM related components --------- //
@@ -74,7 +75,10 @@ public class SettingsActivity extends Activity {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        registrationServiceClient = new RegistrationServiceClient();
+        if (Constants.MOCK_DATA)
+            serviceContext = ServiceContext.buildMock(getAssets());
+        else
+            serviceContext = ServiceContext.build(SharedPrefsUtils.getServerEndpoint(getApplication()));
     }
 
     //TODO check internet connection on resume
@@ -143,10 +147,9 @@ public class SettingsActivity extends Activity {
     }
 
     public void toggleServerInformationContainer(View view) {
-        if(mServerInfoContainer.getVisibility() == View.VISIBLE){
+        if (mServerInfoContainer.getVisibility() == View.VISIBLE) {
             mServerInfoContainer.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             mServerInfoContainer.setVisibility(View.VISIBLE);
         }
 
@@ -166,12 +169,12 @@ public class SettingsActivity extends Activity {
     }
 
     private void doRefreshSensorInformation() {
-        //TODO
-        final DisplayInformation displayInformation = registrationServiceClient.fetchDisplayInformation();
-        final SensorInformation sensorInformation = displayInformation.getSensorInformation();
+        // TODO :
+        final Display display = serviceContext.getRegistrationService().getDisplayInformation(SharedPrefsUtils.getServerToken(getApplication()));
+        final Sensor sensor = display.getSensor();
 
-        this.mSensorIdTextView.setText(sensorInformation.getSensorId());
-        this.mSensorRoomIdTextView.setText(sensorInformation.getRoomId());
+        this.mSensorIdTextView.setText(sensor.getSensorKey());
+        this.mSensorRoomIdTextView.setText(sensor.getRoom().getKey());
 
     }
 }

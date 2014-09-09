@@ -24,8 +24,10 @@ import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
 
+import tr.com.aliok.meetingroomkiosk.android.OverviewActivity;
 import tr.com.aliok.meetingroomkiosk.android.R;
-import tr.com.aliok.meetingroomkiosk.android.restclient.ScheduleServiceClient;
+import tr.com.aliok.meetingroomkiosk.android.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
 import tr.com.aliok.meetingroomkiosk.android.util.DateTimeUtils;
 
 /**
@@ -51,7 +53,7 @@ public class WeekCalendarFragment extends Fragment {
             R.id.day4ColumnHeader
     );
 
-    private OnFragmentInteractionListener mListener;
+    private ActivityContract activityContract;
 
     private WeekCalendarMetrics mWeekCalendarMetrics;
 
@@ -89,8 +91,10 @@ public class WeekCalendarFragment extends Fragment {
         createHourColumn();
         adjustDayColumnHeadersStyles();
 
-        addEvent(new ScheduleServiceClient().fetchSchedule().getEvents().get(0));
-        addEvent(new ScheduleServiceClient().fetchSchedule().getEvents().get(1));
+//        addEvent(new ScheduleServiceRestClient().fetchSchedule().getEvents().get(0));
+//        addEvent(new ScheduleServiceRestClient().fetchSchedule().getEvents().get(1));
+
+        doRefreshViewWithDataFromActivity();
 
         return fragmentRoot;
     }
@@ -106,7 +110,7 @@ public class WeekCalendarFragment extends Fragment {
         flatButton.onThemeChange();
 
         flatButton.setPadding(0, 0, 0, 0);
-        flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventDescription());
+        flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventTitle());
 
         final float eventStartHourInFloat = DateTimeUtils.getHourInFloat(event.getEventStart());
         final float eventEndHourInFloat = DateTimeUtils.getHourInFloat(event.getEventEnd());
@@ -159,7 +163,7 @@ public class WeekCalendarFragment extends Fragment {
                 textView.setText(String.format("%02d:00", i));
                 textView.setIncludeFontPadding(false);
                 textView.setGravity(Gravity.TOP);
-                textView.setPadding(0, -(int) (mWeekCalendarMetrics.heightOfEachHour*0.05),0,0);
+                textView.setPadding(0, -(int) (mWeekCalendarMetrics.heightOfEachHour * 0.05), 0, 0);
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWeekCalendarMetrics.widthOfTimeColumn, mWeekCalendarMetrics.heightOfEachHourPart);
                 params.leftMargin = 0;
@@ -173,7 +177,7 @@ public class WeekCalendarFragment extends Fragment {
                 textView.setText(String.format("%02d:30", i));
                 textView.setIncludeFontPadding(false);
                 textView.setGravity(Gravity.TOP);
-                textView.setPadding(0, -(int) (mWeekCalendarMetrics.heightOfEachHour*0.05),0,0);
+                textView.setPadding(0, -(int) (mWeekCalendarMetrics.heightOfEachHour * 0.05), 0, 0);
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mWeekCalendarMetrics.widthOfTimeColumn, mWeekCalendarMetrics.heightOfEachHourPart);
                 params.leftMargin = 0;
@@ -206,17 +210,34 @@ public class WeekCalendarFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            activityContract = (ActivityContract) activity;
+            activityContract.setWeekCalendarFragment(this);
 
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement ActivityContract");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        activityContract.setWeekCalendarFragment(null);
+        activityContract = null;
+    }
+
+    public void dataArrived() {
+        doRefreshViewWithDataFromActivity();
+    }
+
+    private void doRefreshViewWithDataFromActivity() {
+        final OverviewActivity overviewActivity = (OverviewActivity) getActivity();
+
+        final ScheduleInformation scheduleInformation = overviewActivity.getScheduleInformation();
+        // perhaps the fragment is created but the data request of activity is not done yet!
+        // so, check if activity received the data
+        if (scheduleInformation != null) {
+            addEvent(scheduleInformation.getPeriodSchedules().get(0).getSchedule().getEvents().get(0));
+        }
     }
 
     /**
@@ -226,8 +247,12 @@ public class WeekCalendarFragment extends Fragment {
      * activity.
      * <p/>
      */
-    public interface OnFragmentInteractionListener {
+    public interface ActivityContract {
         public void onEventSelected(Event event);
+
+        public ScheduleInformation getScheduleInformation();
+
+        void setWeekCalendarFragment(WeekCalendarFragment weekCalendarFragment);
     }
 
     private class WeekCalendarMetrics {

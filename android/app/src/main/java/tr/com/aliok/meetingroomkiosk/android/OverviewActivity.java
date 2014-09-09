@@ -3,6 +3,7 @@ package tr.com.aliok.meetingroomkiosk.android;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -12,9 +13,13 @@ import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
 
+import java.util.List;
+
 import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
-import tr.com.aliok.meetingroomkiosk.android.restclient.ScheduleServiceClient;
+import tr.com.aliok.meetingroomkiosk.android.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
+import tr.com.aliok.meetingroomkiosk.android.service.ServiceContext;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
@@ -22,16 +27,22 @@ import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 
 public class OverviewActivity extends FragmentActivity implements
         CurrentSessionFragment.OnFragmentInteractionListener,
-        WeekCalendarFragment.OnFragmentInteractionListener {
+        WeekCalendarFragment.ActivityContract {
 
     private static final int DEFAULT_THEME = FlatUI.GRASS;
 
-    private ViewPager mViewPager;
+    // ---- Services ----------------------- //
+    private ServiceContext serviceContext;
 
     // ------------ data ------------------//
+    private ScheduleInformation scheduleInformation;
     private Event currentEvent;
-    private Event upcomingEvents;
-    private Schedule schedule;
+    private List<Event> upcomingEvents;
+
+    // ---- UI Components ------ //
+    private ViewPager mViewPager;
+    private WeekCalendarFragment mWeekCalendarFragment;
+    private CurrentSessionFragment mCurrentSessionFragment;
 
     //TODO check internet connection on resume
 
@@ -118,6 +129,12 @@ public class OverviewActivity extends FragmentActivity implements
 
         // set initial view
         mViewPager.setCurrentItem(1);
+
+
+        if (Constants.MOCK_DATA)
+            serviceContext = ServiceContext.buildMock(getAssets());
+        else
+            serviceContext = ServiceContext.build(SharedPrefsUtils.getServerEndpoint(getApplication()));
     }
 
     @Override
@@ -136,20 +153,50 @@ public class OverviewActivity extends FragmentActivity implements
             return;
         }
 
-        refreshOverview();
+        fetchScheduleInformation();
     }
 
     @Override
     public void onEventSelected(Event event) {
-        // TODO : display event details in a dialog
+        // TODO
+        return;
     }
 
-    private void refreshOverview() {
+    private void fetchScheduleInformation() {
+        // fetch it in the background
+
+        final String serverToken = SharedPrefsUtils.getServerToken(getApplication());
+        new AsyncTask<Void, Void, ScheduleInformation>() {
+            @Override
+            protected ScheduleInformation doInBackground(Void... voids) {
+                return serviceContext.getScheduleService().getSchedule(serverToken);
+            }
+
+            @Override
+            protected void onPostExecute(ScheduleInformation scheduleInformation) {
+                //TODO : need to adjust current and upcoming
+                OverviewActivity.this.scheduleInformation = scheduleInformation;
+                OverviewActivity.this.currentEvent = scheduleInformation.getPeriodSchedules().get(0).getSchedule().getEvents().get(0);
+                OverviewActivity.this.upcomingEvents = scheduleInformation.getPeriodSchedules().get(0).getSchedule().getEvents();
+
+                notifyFragmentWithDataArrivalIfTheyAreAttached();
+
+            }
+        }.execute(null, null, null);
+
         //TODO
         // fetch the data from the server and update all fragments
-        this.schedule = new ScheduleServiceClient().fetchSchedule();
-        this.upcomingEvents = this.schedule.getEvents().get(0);
-        this.currentEvent = this.schedule.getEvents().get(0);
+    }
+
+    private void notifyFragmentWithDataArrivalIfTheyAreAttached() {
+        // perhaps the data request was too quick and it returned before the fragments are created!
+        // in that case, fragments will check the data upon creation anyway
+        // so, don't worry about notifying them if they're not attached yet
+
+        if (mCurrentSessionFragment != null)
+            mCurrentSessionFragment.dataArrived();
+        if (mWeekCalendarFragment != null)
+            mWeekCalendarFragment.dataArrived();
     }
 
     private boolean checkSensor() {
@@ -205,15 +252,25 @@ public class OverviewActivity extends FragmentActivity implements
         startActivity(intent);
     }
 
-    public Schedule getSchedule() {
-        return schedule;
+    @Override
+    public ScheduleInformation getScheduleInformation() {
+        return scheduleInformation;
     }
 
-    public Event getUpcomingEvents() {
+    public List<Event> getUpcomingEvents() {
         return upcomingEvents;
     }
 
     public Event getCurrentEvent() {
         return currentEvent;
+    }
+
+    public void setmCurrentSessionFragment(CurrentSessionFragment mCurrentSessionFragment) {
+        this.mCurrentSessionFragment = mCurrentSessionFragment;
+    }
+
+    @Override
+    public void setWeekCalendarFragment(WeekCalendarFragment mWeekCalendarFragment) {
+        this.mWeekCalendarFragment = mWeekCalendarFragment;
     }
 }
