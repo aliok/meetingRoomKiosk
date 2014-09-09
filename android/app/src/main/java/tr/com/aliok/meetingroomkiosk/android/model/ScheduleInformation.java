@@ -1,4 +1,4 @@
-package tr.com.aliok.meetingroomkiosk.android.restclient.model;
+package tr.com.aliok.meetingroomkiosk.android.model;
 
 import java.util.List;
 
