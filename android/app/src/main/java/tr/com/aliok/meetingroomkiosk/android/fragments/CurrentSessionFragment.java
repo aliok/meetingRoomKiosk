@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import tr.com.aliok.meetingroomkiosk.android.OverviewActivity;
 import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
-import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
+import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
 
 /**
  * Fragment for displaying current session tab. It includes detail for current session (or next session)
@@ -72,8 +72,8 @@ public class CurrentSessionFragment extends Fragment {
         //TODO
         final OverviewActivity overviewActivity = (OverviewActivity) getActivity();
 
-        final ScheduleInformation scheduleInformation = overviewActivity.getScheduleInformation();
-        System.out.println(scheduleInformation);
+        final PeriodSchedule weekSchedule = overviewActivity.getWeekSchedule();
+        System.out.println(weekSchedule);
     }
 
     /**

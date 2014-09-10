@@ -18,13 +18,18 @@ import java.util.List;
 import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
+import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
 import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
 import tr.com.aliok.meetingroomkiosk.android.service.ServiceContext;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
+import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
 
 
+/**
+ * Default activity of the application. Displays an overview of the events.
+ */
 public class OverviewActivity extends FragmentActivity implements
         CurrentSessionFragment.OnFragmentInteractionListener,
         WeekCalendarFragment.ActivityContract {
@@ -38,6 +43,7 @@ public class OverviewActivity extends FragmentActivity implements
     private ScheduleInformation scheduleInformation;
     private Event currentEvent;
     private List<Event> upcomingEvents;
+    private PeriodSchedule weekPeriodSchedule;
 
     // ---- UI Components ------ //
     private ViewPager mViewPager;
@@ -174,18 +180,32 @@ public class OverviewActivity extends FragmentActivity implements
 
             @Override
             protected void onPostExecute(ScheduleInformation scheduleInformation) {
-                //TODO : need to adjust current and upcoming
                 OverviewActivity.this.scheduleInformation = scheduleInformation;
-                OverviewActivity.this.currentEvent = scheduleInformation.getPeriodSchedules().get(0).getSchedule().getEvents().get(0);
-                OverviewActivity.this.upcomingEvents = scheduleInformation.getPeriodSchedules().get(0).getSchedule().getEvents();
+                extractDataFromScheduleInformation();
 
                 notifyFragmentWithDataArrivalIfTheyAreAttached();
 
             }
         }.execute(null, null, null);
 
-        //TODO
-        // fetch the data from the server and update all fragments
+    }
+
+    private void extractDataFromScheduleInformation() {
+        for (PeriodSchedule periodSchedule : scheduleInformation.getPeriodSchedules()) {
+            if (PeriodType.WEEK.equals(periodSchedule.getPeriod().getPeriodType())) {
+                weekPeriodSchedule = periodSchedule;
+
+            } else if (PeriodType.DAY.equals(periodSchedule.getPeriod().getPeriodType())) {
+                //TODO : need to adjust current and upcoming
+                currentEvent = periodSchedule.getSchedule().getEvents().get(0);
+                upcomingEvents = periodSchedule.getSchedule().getEvents();
+
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+
+
     }
 
     private void notifyFragmentWithDataArrivalIfTheyAreAttached() {
@@ -252,13 +272,13 @@ public class OverviewActivity extends FragmentActivity implements
         startActivity(intent);
     }
 
-    @Override
-    public ScheduleInformation getScheduleInformation() {
-        return scheduleInformation;
-    }
-
     public List<Event> getUpcomingEvents() {
         return upcomingEvents;
+    }
+
+    @Override
+    public PeriodSchedule getWeekSchedule() {
+        return weekPeriodSchedule;
     }
 
     public Event getCurrentEvent() {
