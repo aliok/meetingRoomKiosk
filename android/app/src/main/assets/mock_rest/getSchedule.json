@@ -1,8 +1,8 @@
 {"periodSchedules": [
     {
         "period": {
-            "startDateTime": "2014-09-09T22:00:00Z",
-            "endDateTime": "2014-09-10T22:00:00Z",
+            "startDateTime": "2014-09-10T22:00:00Z",
+            "endDateTime": "2014-09-11T21:59:59Z",
             "periodType": "DAY"
         },
         "schedule": {
@@ -10,14 +10,254 @@
                 "key": "ROOM1",
                 "name": "Quartz B1.01"
             },
-            "scheduleServerSyncTime": "2014-09-09T23:16:30Z",
+            "scheduleServerSyncTime": "2014-09-10T22:30:33Z",
             "events": [
                 {
-                    "eventKey": "ABC-DEF",
+                    "eventKey": "event_today_08oclock",
                     "eventTitle": "Innbound Sprint Planning Meeting",
-                    "eventDescription": "Let's do it on 14:30 since Christoph is not available in the morning",
-                    "eventStart": "2014-09-10T06:00:00Z",
-                    "eventEnd": "2014-09-10T10:00:00Z",
+                    "eventDescription": "Let's do it on 08:30 since Christoph is not available in the morning",
+                    "eventStart": "2014-09-11T06:00:00Z",
+                    "eventEnd": "2014-09-11T09:00:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_today_15oclock",
+                    "eventTitle": "Book club",
+                    "eventDescription": "Join the club",
+                    "eventStart": "2014-09-11T13:00:00Z",
+                    "eventEnd": "2014-09-11T14:15:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "period": {
+            "startDateTime": "2014-09-07T22:00:00Z",
+            "endDateTime": "2014-09-12T21:59:59Z",
+            "periodType": "WEEK"
+        },
+        "schedule": {
+            "room": {
+                "key": "ROOM1",
+                "name": "Quartz B1.01"
+            },
+            "scheduleServerSyncTime": "2014-09-10T22:30:33Z",
+            "events": [
+                {
+                    "eventKey": "event_today_08oclock",
+                    "eventTitle": "Innbound Sprint Planning Meeting",
+                    "eventDescription": "Let's do it on 08:30 since Christoph is not available in the morning",
+                    "eventStart": "2014-09-11T06:00:00Z",
+                    "eventEnd": "2014-09-11T09:00:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_today_15oclock",
+                    "eventTitle": "Book club",
+                    "eventDescription": "Join the club",
+                    "eventStart": "2014-09-11T13:00:00Z",
+                    "eventEnd": "2014-09-11T14:15:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_monday_12oclock",
+                    "eventTitle": "Review meeting",
+                    "eventDescription": "Review and demo",
+                    "eventStart": "2014-09-08T10:00:00Z",
+                    "eventEnd": "2014-09-08T11:30:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_tuesday_11oclock",
+                    "eventTitle": "Review meeting",
+                    "eventDescription": "Review and demo",
+                    "eventStart": "2014-09-09T09:00:00Z",
+                    "eventEnd": "2014-09-09T11:00:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_wednesday_11oclock",
+                    "eventTitle": "Scrum meeting",
+                    "eventDescription": "Daily scrum",
+                    "eventStart": "2014-09-10T09:00:00Z",
+                    "eventEnd": "2014-09-10T12:00:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_thursday_11oclock",
+                    "eventTitle": "Scrum meeting",
+                    "eventDescription": "Daily scrum",
+                    "eventStart": "2014-09-11T09:00:00Z",
+                    "eventEnd": "2014-09-11T12:00:00Z",
+                    "allDayEvent": false,
+                    "organizer": {
+                        "firstName": "Ali",
+                        "lastName": "Ok",
+                        "email": "ali@example.com",
+                        "attendeeStatus": "ACCEPTED"
+                    },
+                    "attendees": [
+                        {
+                            "firstName": "Ali",
+                            "lastName": "Ok",
+                            "email": "ali@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        },
+                        {
+                            "firstName": "Rene",
+                            "lastName": "Gunther",
+                            "email": "rene@example.com",
+                            "attendeeStatus": "ACCEPTED"
+                        }
+                    ]
+                },
+                {
+                    "eventKey": "event_friday_11oclock",
+                    "eventTitle": "Scrum meeting",
+                    "eventDescription": "Daily scrum",
+                    "eventStart": "2014-09-12T09:00:00Z",
+                    "eventEnd": "2014-09-12T12:00:00Z",
                     "allDayEvent": false,
                     "organizer": {
                         "firstName": "Ali",
