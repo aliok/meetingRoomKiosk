@@ -231,15 +231,14 @@ public class WeekCalendarFragment extends Fragment {
         // TODO listener
 
         // ---------------- set location and size -----------------------//
-        int eventSeperatorMargin = Math.round(mWeekCalendarMetrics.heightOfEachHourPart * 0.1f);       // some margin to make the events separated
 
         final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                Math.round((eventEndHourInFloat - eventStartHourInFloat) * mWeekCalendarMetrics.heightOfEachHour) - 2 * eventSeperatorMargin
+                Math.round((eventEndHourInFloat - eventStartHourInFloat) * mWeekCalendarMetrics.heightOfEachHour) - 2 * mWeekCalendarMetrics.eventSeperatorMargin
         );
-        params.leftMargin = eventSeperatorMargin;
-        params.rightMargin = eventSeperatorMargin;
-        params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (eventStartHourInFloat - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader) + eventSeperatorMargin;
+        params.leftMargin = mWeekCalendarMetrics.eventSeperatorMargin;
+        params.rightMargin = mWeekCalendarMetrics.eventSeperatorMargin;
+        params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (eventStartHourInFloat - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader) + mWeekCalendarMetrics.eventSeperatorMargin;
 
         // ---------------- add button -----------------------//
         mDayColumns.get(dayOfWeek).addView(flatButton, params);
@@ -302,6 +301,8 @@ public class WeekCalendarFragment extends Fragment {
         private int sizeOfHourText;
         private int sizeOfEventTitleText;
 
+        private int eventSeperatorMargin;       // some margin to make the events separated
+
         private WeekCalendarMetrics(View fragmentView, WindowManager windowManager) {
             final DisplayMetrics displayMetrics = new DisplayMetrics();
             windowManager.getDefaultDisplay().getMetrics(displayMetrics);
@@ -316,6 +317,8 @@ public class WeekCalendarFragment extends Fragment {
             sizeOfHourText = Math.round(heightOfEachHourPart * 0.9f);
 
             sizeOfEventTitleText = Math.round(sizeOfHourText * 0.7f);
+
+            eventSeperatorMargin = Math.round(heightOfEachHour * 0.1f);
         }
 
     }
