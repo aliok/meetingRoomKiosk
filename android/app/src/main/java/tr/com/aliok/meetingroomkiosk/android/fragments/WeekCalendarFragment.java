@@ -57,8 +57,8 @@ public class WeekCalendarFragment extends Fragment {
             R.id.day4ColumnHeader
     );
 
+    // ------ activity and metrics ----------------
     private ActivityContract activityContract;
-
     private WeekCalendarMetrics mWeekCalendarMetrics;
 
     // ------ component bindings -----------------
@@ -81,9 +81,10 @@ public class WeekCalendarFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         final View fragmentRoot = inflater.inflate(R.layout.fragment_week_calendar, container, false);
+
         final WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
 
 
@@ -91,55 +92,12 @@ public class WeekCalendarFragment extends Fragment {
         createFields(fragmentRoot, windowManager);
 
         // initialize fragment view with empty data
-//        createLines();
         createHourColumn();
         adjustDayColumnHeadersStyles();
-
-//        addEvent(new ScheduleServiceRestClient().fetchSchedule().getEvents().get(0));
-//        addEvent(new ScheduleServiceRestClient().fetchSchedule().getEvents().get(1));
 
         doRefreshViewWithDataFromActivity();
 
         return fragmentRoot;
-    }
-
-    private void addEvent(Event event) {
-        final float eventStartHourInFloat = DateTimeUtils.getHourInFloat(event.getEventStart());
-        final float eventEndHourInFloat = DateTimeUtils.getHourInFloat(event.getEventEnd());
-        final int dayOfWeek = DateTimeUtils.getDayOfWeekZeroIndexed(event.getEventStart());
-        if (dayOfWeek >= 5)     // we don't show weekend events
-            return;
-
-        // ---------------- button creation -----------------------//
-        final FlatButton flatButton = new FlatButton(getActivity());
-
-        flatButton.getAttributes().setTheme(FlatUI.GRASS, getResources());
-        flatButton.getAttributes().setBorderWidth(0);
-        // set it like that since that depends already on height of each hour
-        flatButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, mWeekCalendarMetrics.sizeOfEventTitleText);
-
-        // trigger this one. otherwise attributes will not be picked up by the component
-        flatButton.onThemeChange();
-
-        flatButton.setPadding(0, 0, 0, 0);
-
-        // ---------------- set data and the listener -----------------------//
-        flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventTitle());
-        // TODO listener
-
-        // ---------------- set location and size -----------------------//
-        int eventSeperatorMargin = Math.round(mWeekCalendarMetrics.heightOfEachHourPart * 0.1f);       // some margin to make the events separated
-
-        final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                Math.round((eventEndHourInFloat - eventStartHourInFloat) * mWeekCalendarMetrics.heightOfEachHour) - 2 * eventSeperatorMargin
-        );
-        params.leftMargin = eventSeperatorMargin;
-        params.rightMargin = eventSeperatorMargin;
-        params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (eventStartHourInFloat - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader) + eventSeperatorMargin;
-
-        // ---------------- add button -----------------------//
-        mDayColumns.get(dayOfWeek).addView(flatButton, params);
     }
 
     private void bindComponents(final View fragmentRoot) {
@@ -205,13 +163,6 @@ public class WeekCalendarFragment extends Fragment {
         }
     }
 
-    private void adjustDayColumnHeadersStyles() {
-        for (FlatTextView columnHeader : mDayColumHeaders) {
-            // adjust day column header heights with the defined one in metrics
-            columnHeader.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mWeekCalendarMetrics.heightOfHeader));
-        }
-    }
-
     private FlatTextView createHourLabelTextView() {
         final FlatTextView textView = new FlatTextView(getActivity());
 
@@ -221,6 +172,77 @@ public class WeekCalendarFragment extends Fragment {
 
         textView.onThemeChange();       // need to trigger this one to make sure FlatTextView reads attributes set!
         return textView;
+    }
+
+    private void adjustDayColumnHeadersStyles() {
+        for (FlatTextView columnHeader : mDayColumHeaders) {
+            // adjust day column header heights with the defined one in metrics
+            columnHeader.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mWeekCalendarMetrics.heightOfHeader));
+        }
+    }
+
+    private void doRefreshViewWithDataFromActivity() {
+        final PeriodSchedule weekSchedule = activityContract.getWeekSchedule();
+
+        // perhaps the fragment is created but the data request of activity is not done yet!
+        // so, check if activity received the data
+        if (weekSchedule != null) {
+            Validate.isTrue(weekSchedule.getPeriod().getPeriodType().equals(PeriodType.WEEK));
+
+            //arrange header texts!
+            final TreeSet<Date> daysInWeek = DateTimeUtils.getDaysInDateTimeRange(weekSchedule.getPeriod().getStartDateTime(), weekSchedule.getPeriod().getEndDateTime());
+            Validate.isTrue(daysInWeek.size() == 5);        // we don't care about weekends. actually, we should not receive them from the server anyway!
+            int i = 0;
+            for (Date date : daysInWeek) {
+                final String dateStr = DateTimeUtils.getLongDateStr(date);
+                this.mDayColumHeaders.get(i).setText(dateStr);
+                i++;
+            }
+
+            // add events
+            for (Event event : weekSchedule.getSchedule().getEvents()) {
+                addEvent(event);
+            }
+        }
+    }
+
+    private void addEvent(Event event) {
+        final float eventStartHourInFloat = DateTimeUtils.getHourInFloat(event.getEventStart());
+        final float eventEndHourInFloat = DateTimeUtils.getHourInFloat(event.getEventEnd());
+        final int dayOfWeek = DateTimeUtils.getDayOfWeekZeroIndexed(event.getEventStart());
+        if (dayOfWeek >= 5)     // we don't show weekend events
+            return;
+
+        // ---------------- button creation -----------------------//
+        final FlatButton flatButton = new FlatButton(getActivity());
+
+        flatButton.getAttributes().setTheme(FlatUI.GRASS, getResources());
+        flatButton.getAttributes().setBorderWidth(0);
+        // set it like that since that depends already on height of each hour
+        flatButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, mWeekCalendarMetrics.sizeOfEventTitleText);
+
+        // trigger this one. otherwise attributes will not be picked up by the component
+        flatButton.onThemeChange();
+
+        flatButton.setPadding(0, 0, 0, 0);
+
+        // ---------------- set data and the listener -----------------------//
+        flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventTitle());
+        // TODO listener
+
+        // ---------------- set location and size -----------------------//
+        int eventSeperatorMargin = Math.round(mWeekCalendarMetrics.heightOfEachHourPart * 0.1f);       // some margin to make the events separated
+
+        final RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                Math.round((eventEndHourInFloat - eventStartHourInFloat) * mWeekCalendarMetrics.heightOfEachHour) - 2 * eventSeperatorMargin
+        );
+        params.leftMargin = eventSeperatorMargin;
+        params.rightMargin = eventSeperatorMargin;
+        params.topMargin = Math.round(mWeekCalendarMetrics.heightOfEachHour * (eventStartHourInFloat - mWeekCalendarMetrics.DAY_START_HOUR) + mWeekCalendarMetrics.heightOfHeader) + eventSeperatorMargin;
+
+        // ---------------- add button -----------------------//
+        mDayColumns.get(dayOfWeek).addView(flatButton, params);
     }
 
     @Override
@@ -244,32 +266,6 @@ public class WeekCalendarFragment extends Fragment {
 
     public void dataArrived() {
         doRefreshViewWithDataFromActivity();
-    }
-
-    private void doRefreshViewWithDataFromActivity() {
-        final PeriodSchedule weekSchedule = activityContract.getWeekSchedule();
-        // perhaps the fragment is created but the data request of activity is not done yet!
-        // so, check if activity received the data
-
-
-        if (weekSchedule != null) {
-            Validate.isTrue(weekSchedule.getPeriod().getPeriodType().equals(PeriodType.WEEK));
-
-            //arrange header texts!
-            final TreeSet<Date> daysInWeek = DateTimeUtils.getDaysInDateTimeRange(weekSchedule.getPeriod().getStartDateTime(), weekSchedule.getPeriod().getEndDateTime());
-            Validate.isTrue(daysInWeek.size() == 5);        // we don't care about weekends. actually, we should not receive them from the server anyway!
-            int i = 0;
-            for (Date date : daysInWeek) {
-                final String dateStr = DateTimeUtils.getLongDateStr(date);
-                this.mDayColumHeaders.get(i).setText(dateStr);
-                i++;
-            }
-
-            // add events
-            for (Event event : weekSchedule.getSchedule().getEvents()) {
-                addEvent(event);
-            }
-        }
     }
 
     /**
