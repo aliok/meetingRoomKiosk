@@ -27,6 +27,7 @@ import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
 import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
 import tr.com.aliok.meetingroomkiosk.android.service.ServiceContext;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
+import tr.com.aliok.meetingroomkiosk.android.util.Clock;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
@@ -139,7 +140,7 @@ public class OverviewActivity extends FragmentActivity implements
                 });
 
         // set initial view
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
 
 
         // create service context
@@ -189,6 +190,8 @@ public class OverviewActivity extends FragmentActivity implements
                 OverviewActivity.this.scheduleInformation = scheduleInformation;
                 extractDataFromScheduleInformation();
 
+                // TODO: go to week tab if there is nothing today (no upcoming events and no current even)
+
                 notifyFragmentWithDataArrivalIfTheyAreAttached();
 
             }
@@ -206,12 +209,12 @@ public class OverviewActivity extends FragmentActivity implements
             } else if (PeriodType.DAY.equals(periodSchedule.getPeriod().getPeriodType())) {
                 // extract day schedule
 
-                final Date now = new Date();
+                final Date now = Clock.now();
                 final List<Event> eventsOfToday = periodSchedule.getSchedule().getEvents();
                 final List<Event> nonPastEvents = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
                     @Override
                     public boolean apply(Event input) {
-                        return input.getEventStart().after(now);
+                        return !input.getEventStart().after(now); // means : now is before or equal to input.eventStart
                     }
                 }));
 
@@ -295,6 +298,11 @@ public class OverviewActivity extends FragmentActivity implements
     private void goToSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void refresh() {
+        //TODO : refresh views with current scheduleInformation. do not fetch the data again immediately. do it in the background.
     }
 
     @Override
