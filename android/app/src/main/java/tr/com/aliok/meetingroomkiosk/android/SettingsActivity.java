@@ -169,7 +169,6 @@ public class SettingsActivity extends Activity {
     }
 
     private void doRefreshSensorInformation() {
-        // TODO :
         final Display display = serviceContext.getRegistrationService().getDisplayInformation(SharedPrefsUtils.getServerToken(getApplication()));
         final Sensor sensor = display.getSensor();
 

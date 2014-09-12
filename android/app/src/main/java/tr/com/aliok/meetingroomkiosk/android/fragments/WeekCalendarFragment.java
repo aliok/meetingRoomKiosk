@@ -203,6 +203,8 @@ public class WeekCalendarFragment extends Fragment {
             for (Event event : weekSchedule.getSchedule().getEvents()) {
                 addEvent(event);
             }
+        } else {
+            // TODO should we display "no events" ?
         }
     }
 
@@ -275,11 +277,11 @@ public class WeekCalendarFragment extends Fragment {
      * <p/>
      */
     public interface ActivityContract {
+        void setWeekCalendarFragment(WeekCalendarFragment weekCalendarFragment);
+
         public void onEventSelected(Event event);
 
         public PeriodSchedule getWeekSchedule();
-
-        void setWeekCalendarFragment(WeekCalendarFragment weekCalendarFragment);
     }
 
     private class WeekCalendarMetrics {

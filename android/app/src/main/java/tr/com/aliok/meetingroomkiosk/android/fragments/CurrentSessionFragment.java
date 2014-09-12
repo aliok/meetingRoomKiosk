@@ -7,24 +7,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import tr.com.aliok.meetingroomkiosk.android.OverviewActivity;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.List;
+
 import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
-import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
 
 /**
  * Fragment for displaying current session tab. It includes detail for current session (or next session)
  * and list of today's upcoming sessions.
  * <p/>
  * Activities that contain this fragment must implement the
- * {@link CurrentSessionFragment.OnFragmentInteractionListener} interface
+ * {@link tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment.ActivityContract} interface
  * to handle interaction events.
  * Use the {@link CurrentSessionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class CurrentSessionFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private ActivityContract activityContract;
 
     /**
      * Use this factory method to create a new instance of
@@ -56,24 +58,52 @@ public class CurrentSessionFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            activityContract = (ActivityContract) activity;
+            activityContract.setCurrentSessionFragment(this);
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString() + " must implement ActivityContract");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        activityContract.setCurrentSessionFragment(null);
+        activityContract = null;
     }
 
     public void dataArrived() {
-        //TODO
-        final OverviewActivity overviewActivity = (OverviewActivity) getActivity();
+        doRefreshViewWithDataFromActivity();
+    }
 
-        final PeriodSchedule weekSchedule = overviewActivity.getWeekSchedule();
-        System.out.println(weekSchedule);
+    private void doRefreshViewWithDataFromActivity() {
+        final Event currentEvent = activityContract.getCurrentEvent();
+        final List<Event> upcomingEvents = activityContract.getUpcomingEvents();
+
+        // perhaps the fragment is created but the data request of activity is not done yet!
+        // so, check if activity received the data
+        if (currentEvent == null) {
+            // TODO: display "no event"
+            if (CollectionUtils.isEmpty(upcomingEvents)) {
+                // TODO: display "no upcoming event"
+            } else {
+                final Event nextEvent = upcomingEvents.get(0);
+                // TODO: display next event
+                // TODO: start countdown for start of next event
+            }
+        } else {
+            // TODO display current event details
+            // TODO start count down for end of current event
+        }
+
+        if (CollectionUtils.isEmpty(upcomingEvents)) {
+            // TODO display "no upcoming events"
+        } else {
+            // TODO display list of upcoming events
+        }
+
+        // TODO refresh view when countdown is finished
+        // TODO best way : creating a countdown component which notifies parent when countdown == 00:00:00
     }
 
     /**
@@ -83,8 +113,14 @@ public class CurrentSessionFragment extends Fragment {
      * activity.
      * <p/>
      */
-    public interface OnFragmentInteractionListener {
-        public void onEventSelected(Event event);
+    public interface ActivityContract {
+        public void setCurrentSessionFragment(CurrentSessionFragment currentSessionFragment);
+
+        void onEventSelected(Event event);
+
+        Event getCurrentEvent();
+
+        List<Event> getUpcomingEvents();
     }
 
 }

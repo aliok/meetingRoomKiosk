@@ -8,7 +8,7 @@ import tr.com.aliok.meetingroomkiosk.model.api.EventModel;
 /**
  * @author Ali Ok (ali.ok@apache.org)
  */
-public class Event implements EventModel {
+public class Event implements EventModel, Comparable<Event> {
 
     private String eventKey;
     private String eventTitle;
@@ -59,4 +59,34 @@ public class Event implements EventModel {
         return attendees;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Event event = (Event) o;
+
+        if (!eventKey.equals(event.eventKey)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return eventKey.hashCode();
+    }
+
+    @Override
+    public int compareTo(Event other) {
+        if (other == null)
+            return -1;
+
+        int i = this.getEventStart().compareTo(other.getEventStart());
+        if (i == 0)
+            i = this.getEventEnd().compareTo(other.getEventEnd());
+        if (i == 0)
+            i = this.getEventKey().compareTo(other.getEventKey());
+
+        return i;
+    }
 }

@@ -12,7 +12,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
@@ -31,7 +36,7 @@ import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
  * Default activity of the application. Displays an overview of the events.
  */
 public class OverviewActivity extends FragmentActivity implements
-        CurrentSessionFragment.OnFragmentInteractionListener,
+        CurrentSessionFragment.ActivityContract,
         WeekCalendarFragment.ActivityContract {
 
     private static final int DEFAULT_THEME = FlatUI.GRASS;
@@ -137,6 +142,7 @@ public class OverviewActivity extends FragmentActivity implements
         mViewPager.setCurrentItem(1);
 
 
+        // create service context
         if (Constants.MOCK_DATA)
             serviceContext = ServiceContext.buildMock(getAssets());
         else
@@ -192,14 +198,33 @@ public class OverviewActivity extends FragmentActivity implements
 
     private void extractDataFromScheduleInformation() {
         for (PeriodSchedule periodSchedule : scheduleInformation.getPeriodSchedules()) {
+            // extract week schedule
+
             if (PeriodType.WEEK.equals(periodSchedule.getPeriod().getPeriodType())) {
                 weekPeriodSchedule = periodSchedule;
 
             } else if (PeriodType.DAY.equals(periodSchedule.getPeriod().getPeriodType())) {
-                //TODO : need to adjust current and upcoming
-                currentEvent = periodSchedule.getSchedule().getEvents().get(0);
-                upcomingEvents = periodSchedule.getSchedule().getEvents();
+                // extract day schedule
 
+                final Date now = new Date();
+                final List<Event> eventsOfToday = periodSchedule.getSchedule().getEvents();
+                final List<Event> nonPastEvents = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
+                    @Override
+                    public boolean apply(Event input) {
+                        return input.getEventStart().after(now);
+                    }
+                }));
+
+                for (Event nonPastEvent : nonPastEvents) {
+                    if (nonPastEvent.getEventStart().before(now) && nonPastEvent.getEventEnd().after(now)) {
+                        currentEvent = nonPastEvent;
+                        break;
+                    }
+                }
+
+                nonPastEvents.remove(currentEvent);
+                upcomingEvents = nonPastEvents;
+                Collections.sort(upcomingEvents);
             } else {
                 throw new IllegalStateException();
             }
@@ -217,11 +242,6 @@ public class OverviewActivity extends FragmentActivity implements
             mCurrentSessionFragment.dataArrived();
         if (mWeekCalendarFragment != null)
             mWeekCalendarFragment.dataArrived();
-    }
-
-    private boolean checkSensor() {
-        //TODO : fetch data from server and see if there is an assigned sensor!
-        return true;
     }
 
     /**
@@ -244,6 +264,11 @@ public class OverviewActivity extends FragmentActivity implements
             return false;
         }
 
+        return true;
+    }
+
+    private boolean checkSensor() {
+        //TODO : fetch data from server and see if there is an assigned sensor!
         return true;
     }
 
@@ -272,6 +297,7 @@ public class OverviewActivity extends FragmentActivity implements
         startActivity(intent);
     }
 
+    @Override
     public List<Event> getUpcomingEvents() {
         return upcomingEvents;
     }
@@ -281,12 +307,14 @@ public class OverviewActivity extends FragmentActivity implements
         return weekPeriodSchedule;
     }
 
+    @Override
     public Event getCurrentEvent() {
         return currentEvent;
     }
 
-    public void setmCurrentSessionFragment(CurrentSessionFragment mCurrentSessionFragment) {
-        this.mCurrentSessionFragment = mCurrentSessionFragment;
+    @Override
+    public void setCurrentSessionFragment(CurrentSessionFragment currentSessionFragment) {
+        this.mCurrentSessionFragment = currentSessionFragment;
     }
 
     @Override
