@@ -32,5 +32,7 @@
     <string name="on_air">ON AIR</string>
     <string name="session_in_progress">Session In Progress</string>
     <string name="no_session_in_progress">No Session In Progress</string>
+    <string name="unable_to_fetch_sensor_info">Unable to fetch the display or sensor information.</string>
+    <string name="syncing">Synchronizing, please wait...</string>
 
 </resources>
