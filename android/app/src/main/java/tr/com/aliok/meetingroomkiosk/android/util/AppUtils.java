@@ -68,7 +68,7 @@ public class AppUtils {
 
         InputStreamReader inputStreamReader = null;
         try {
-            final BufferedInputStream inputStream = new BufferedInputStream(assetManager.open("mock_rest/getSchedule.json"));
+            final BufferedInputStream inputStream = new BufferedInputStream(assetManager.open(filePath));
             inputStreamReader = new InputStreamReader(inputStream, Charsets.UTF_8.name());
             return CharStreams.toString(inputStreamReader);
         } catch (IOException e) {
