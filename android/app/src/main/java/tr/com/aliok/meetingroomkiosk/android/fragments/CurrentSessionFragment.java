@@ -12,6 +12,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
+import tr.com.aliok.meetingroomkiosk.android.components.CountDownTextView;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
 
 /**
@@ -24,9 +25,11 @@ import tr.com.aliok.meetingroomkiosk.android.model.Event;
  * Use the {@link CurrentSessionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CurrentSessionFragment extends Fragment {
+public class CurrentSessionFragment extends Fragment implements CountDownTextView.CountDownListener {
 
     private ActivityContract activityContract;
+
+    private CountDownTextView mCountDownTextView;
 
     /**
      * Use this factory method to create a new instance of
@@ -51,7 +54,14 @@ public class CurrentSessionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_current_session, container, false);
+        final View view = inflater.inflate(R.layout.fragment_current_session, container, false);
+
+        this.mCountDownTextView = (CountDownTextView) view.findViewById(R.id.countDownTextView);
+        this.mCountDownTextView.setCountDownListener(this);
+
+        doRefreshViewWithDataFromActivity();
+
+        return view;
     }
 
     @Override
@@ -87,13 +97,15 @@ public class CurrentSessionFragment extends Fragment {
             if (CollectionUtils.isEmpty(upcomingEvents)) {
                 // TODO: display "no upcoming event"
             } else {
-                final Event nextEvent = upcomingEvents.get(0);
+                final Event nextEvent = upcomingEvents.get(0);      // they're already sorted, get the first one
                 // TODO: display next event
-                // TODO: start countdown for start of next event
+                // start countdown for start of next event
+                this.mCountDownTextView.startCountDown(nextEvent.getEventStart());
             }
         } else {
             // TODO display current event details
-            // TODO start count down for end of current event
+            // start count down for end of current event
+            this.mCountDownTextView.startCountDown(currentEvent.getEventEnd());
         }
 
         if (CollectionUtils.isEmpty(upcomingEvents)) {
@@ -104,6 +116,11 @@ public class CurrentSessionFragment extends Fragment {
 
         // TODO refresh view when countdown is finished
         // TODO best way : creating a countdown component which notifies parent when countdown == 00:00:00
+    }
+
+    @Override
+    public void onCountDownFinished(CountDownTextView countDownTextView) {
+        activityContract.refresh();
     }
 
     /**
@@ -121,6 +138,8 @@ public class CurrentSessionFragment extends Fragment {
         Event getCurrentEvent();
 
         List<Event> getUpcomingEvents();
+
+        void refresh();
     }
 
 }
