@@ -30,6 +30,7 @@ dependencies {
     compile 'tr.com.aliok:meetingRoomKiosk-model-api:1.0-SNAPSHOT'
 
     compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.apache.commons:commons-collections4:4.0'
     compile 'com.google.android.gms:play-services:5.0+'
     compile 'com.github.eluleci:flatui:2.1.1'
     compile 'com.android.support:support-v4:20.0.0'
