@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start|top"
     android:orientation="vertical"
-    tools:context="tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment">
+    tools:context="tr.com.aliok.meetingroomkiosk.android.fragments.NowAndTodayOverviewFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

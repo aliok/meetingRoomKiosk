@@ -20,12 +20,12 @@ import tr.com.aliok.meetingroomkiosk.android.model.Event;
  * and list of today's upcoming sessions.
  * <p/>
  * Activities that contain this fragment must implement the
- * {@link tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment.ActivityContract} interface
+ * {@link NowAndTodayOverviewFragment.ActivityContract} interface
  * to handle interaction events.
- * Use the {@link CurrentSessionFragment#newInstance} factory method to
+ * Use the {@link NowAndTodayOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CurrentSessionFragment extends Fragment implements CountDownTextView.CountDownListener {
+public class NowAndTodayOverviewFragment extends Fragment implements CountDownTextView.CountDownListener {
 
     private ActivityContract activityContract;
 
@@ -35,13 +35,13 @@ public class CurrentSessionFragment extends Fragment implements CountDownTextVie
      * Use this factory method to create a new instance of
      * this fragment.
      *
-     * @return A new instance of fragment CurrentSessionFragmet.
+     * @return A new instance of fragment
      */
-    public static CurrentSessionFragment newInstance() {
-        return new CurrentSessionFragment();
+    public static NowAndTodayOverviewFragment newInstance() {
+        return new NowAndTodayOverviewFragment();
     }
 
-    public CurrentSessionFragment() {
+    public NowAndTodayOverviewFragment() {
         // Required empty public constructor
     }
 
@@ -54,7 +54,7 @@ public class CurrentSessionFragment extends Fragment implements CountDownTextVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_current_session, container, false);
+        final View view = inflater.inflate(R.layout.fragment_now_or_today_overview, container, false);
 
         this.mCountDownTextView = (CountDownTextView) view.findViewById(R.id.countDownTextView);
         this.mCountDownTextView.setCountDownListener(this);
@@ -69,7 +69,7 @@ public class CurrentSessionFragment extends Fragment implements CountDownTextVie
         super.onAttach(activity);
         try {
             activityContract = (ActivityContract) activity;
-            activityContract.setCurrentSessionFragment(this);
+            activityContract.setNowAndTodayOverviewFragment(this);
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ActivityContract");
         }
@@ -78,7 +78,7 @@ public class CurrentSessionFragment extends Fragment implements CountDownTextVie
     @Override
     public void onDetach() {
         super.onDetach();
-        activityContract.setCurrentSessionFragment(null);
+        activityContract.setNowAndTodayOverviewFragment(null);
         activityContract = null;
     }
 
@@ -131,7 +131,7 @@ public class CurrentSessionFragment extends Fragment implements CountDownTextVie
      * <p/>
      */
     public interface ActivityContract {
-        public void setCurrentSessionFragment(CurrentSessionFragment currentSessionFragment);
+        public void setNowAndTodayOverviewFragment(NowAndTodayOverviewFragment nowAndTodayOverviewFragment);
 
         void onEventSelected(Event event);
 

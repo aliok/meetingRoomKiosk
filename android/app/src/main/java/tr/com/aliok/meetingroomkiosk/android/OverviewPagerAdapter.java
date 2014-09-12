@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
+import tr.com.aliok.meetingroomkiosk.android.fragments.NowAndTodayOverviewFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
 
 public class OverviewPagerAdapter extends FragmentPagerAdapter {
@@ -21,7 +21,7 @@ public class OverviewPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return CurrentSessionFragment.newInstance();
+                return NowAndTodayOverviewFragment.newInstance();
             case 1:
                 return WeekCalendarFragment.newInstance();
         }

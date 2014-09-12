@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import tr.com.aliok.meetingroomkiosk.android.fragments.CurrentSessionFragment;
+import tr.com.aliok.meetingroomkiosk.android.fragments.NowAndTodayOverviewFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
 import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
@@ -37,7 +37,7 @@ import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
  * Default activity of the application. Displays an overview of the events.
  */
 public class OverviewActivity extends FragmentActivity implements
-        CurrentSessionFragment.ActivityContract,
+        NowAndTodayOverviewFragment.ActivityContract,
         WeekCalendarFragment.ActivityContract {
 
     private static final int DEFAULT_THEME = FlatUI.GRASS;
@@ -54,7 +54,7 @@ public class OverviewActivity extends FragmentActivity implements
     // ---- UI Components ------ //
     private ViewPager mViewPager;
     private WeekCalendarFragment mWeekCalendarFragment;
-    private CurrentSessionFragment mCurrentSessionFragment;
+    private NowAndTodayOverviewFragment mNowAndTodayOverviewFragment;
 
     //TODO check internet connection on resume
 
@@ -241,8 +241,8 @@ public class OverviewActivity extends FragmentActivity implements
         // in that case, fragments will check the data upon creation anyway
         // so, don't worry about notifying them if they're not attached yet
 
-        if (mCurrentSessionFragment != null)
-            mCurrentSessionFragment.dataArrived();
+        if (mNowAndTodayOverviewFragment != null)
+            mNowAndTodayOverviewFragment.dataArrived();
         if (mWeekCalendarFragment != null)
             mWeekCalendarFragment.dataArrived();
     }
@@ -321,8 +321,8 @@ public class OverviewActivity extends FragmentActivity implements
     }
 
     @Override
-    public void setCurrentSessionFragment(CurrentSessionFragment currentSessionFragment) {
-        this.mCurrentSessionFragment = currentSessionFragment;
+    public void setNowAndTodayOverviewFragment(NowAndTodayOverviewFragment nowAndTodayOverviewFragment) {
+        this.mNowAndTodayOverviewFragment = nowAndTodayOverviewFragment;
     }
 
     @Override
