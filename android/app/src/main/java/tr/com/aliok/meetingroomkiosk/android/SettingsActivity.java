@@ -1,6 +1,7 @@
 package tr.com.aliok.meetingroomkiosk.android;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -66,7 +67,7 @@ public class SettingsActivity extends Activity {
             String gcmRegistrationId = SharedPrefsUtils.getGcmRegistrationId(getApplication());
 
             if (gcmRegistrationId.isEmpty()) {
-                registerToGcm();
+                registerToGcmInBackground();
             } else {
                 Log.i(TAG, "Registration id found : " + gcmRegistrationId);
                 mGcmRegistrationIdTextView.setText(gcmRegistrationId);
@@ -100,7 +101,7 @@ public class SettingsActivity extends Activity {
      * Stores the registration ID and the app versionCode in the application's
      * shared preferences.
      */
-    private void registerToGcm() {
+    private void registerToGcmInBackground() {
         final Context applicationContext = getApplicationContext();
 
         new AsyncTask<Void, Void, String>() {
@@ -134,7 +135,7 @@ public class SettingsActivity extends Activity {
     }
 
     public void reRegisterToGcm(View view) {
-        registerToGcm();
+        registerToGcmInBackground();
     }
 
     public void registerToServer(View view) {
@@ -169,11 +170,43 @@ public class SettingsActivity extends Activity {
     }
 
     private void doRefreshSensorInformation() {
-        final Display display = serviceContext.getRegistrationService().getDisplayInformation(SharedPrefsUtils.getServerToken(getApplication()));
-        final Sensor sensor = display.getSensor();
+        new AsyncTask<Void, Void, Display>() {
 
-        this.mSensorIdTextView.setText(sensor.getSensorKey());
-        this.mSensorRoomIdTextView.setText(sensor.getRoom().getKey());
+            ProgressDialog progressDialog;
+
+            @Override
+            protected Display doInBackground(Void... voids) {
+                return serviceContext.getRegistrationService().getDisplayInformation(SharedPrefsUtils.getServerToken(getApplication()));
+            }
+
+            @Override
+            protected void onPreExecute() {
+                // show loading indicator
+                if (progressDialog == null) {
+                    progressDialog = new ProgressDialog(SettingsActivity.this);
+                    progressDialog.setMessage(getResources().getString(R.string.syncing));
+                    progressDialog.show();
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setCancelable(false);
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Display display) {
+                if (display == null || display.getSensor() == null) {
+                    Toast.makeText(SettingsActivity.this, getResources().getText(R.string.unable_to_fetch_sensor_info), Toast.LENGTH_LONG).show();
+                } else {
+                    final Sensor sensor = display.getSensor();
+
+                    mSensorIdTextView.setText(sensor.getSensorKey());
+                    mSensorRoomIdTextView.setText(sensor.getRoom().getKey());
+                }
+
+                // hide loading indicator
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+            }
+        }.execute();
 
     }
 }
