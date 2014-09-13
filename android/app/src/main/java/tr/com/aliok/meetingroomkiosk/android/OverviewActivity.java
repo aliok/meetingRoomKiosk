@@ -211,22 +211,22 @@ public class OverviewActivity extends FragmentActivity implements
 
                 final Date now = Clock.now();
                 final List<Event> eventsOfToday = periodSchedule.getSchedule().getEvents();
-                final List<Event> nonPastEvents = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
+                final List<Event> eventsStartAfterNow = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
                     @Override
                     public boolean apply(Event input) {
-                        return !input.getEventStart().after(now); // means : now is before or equal to input.eventStart
+                        return !now.after(input.getEventStart()); // means : now is before or equal to input.eventStart
                     }
                 }));
 
-                for (Event nonPastEvent : nonPastEvents) {
-                    if (nonPastEvent.getEventStart().before(now) && nonPastEvent.getEventEnd().after(now)) {
-                        currentEvent = nonPastEvent;
+                for (Event eventOfToday : eventsOfToday) {
+                    if (eventOfToday.getEventStart().before(now) && eventOfToday.getEventEnd().after(now)) {
+                        currentEvent = eventOfToday;
                         break;
                     }
                 }
 
-                nonPastEvents.remove(currentEvent);
-                upcomingEvents = nonPastEvents;
+                eventsStartAfterNow.remove(currentEvent);
+                upcomingEvents = eventsStartAfterNow;
                 Collections.sort(upcomingEvents);
             } else {
                 throw new IllegalStateException();

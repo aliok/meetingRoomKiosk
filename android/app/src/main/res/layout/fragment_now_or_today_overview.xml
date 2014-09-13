@@ -22,11 +22,13 @@
 
             <!--TODO: change text to next session if there is no current event-->
             <com.cengalabs.flatui.views.FlatTextView
+                android:id="@+id/currentOrNextEventBannerTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
-                android:text="@string/session_in_progress"
                 android:textSize="30sp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 flatui:fl_backgroundColor="fl_main"
                 flatui:fl_textColor="darker" />
 
@@ -42,6 +44,7 @@
 
             <!--TODO: hide if there is no current event in progress-->
             <tr.com.aliok.meetingroomkiosk.android.components.BlinkingTextView
+                android:id="@+id/onAirTextView"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"
@@ -50,6 +53,7 @@
                 android:text="@string/on_air"
                 android:textColor="@android:color/white"
                 android:textSize="30sp"
+                android:visibility="invisible"
                 flatui:fl_backgroundColor="fl_main"
                 flatui:fl_theme="@array/blood" />
         </LinearLayout>
