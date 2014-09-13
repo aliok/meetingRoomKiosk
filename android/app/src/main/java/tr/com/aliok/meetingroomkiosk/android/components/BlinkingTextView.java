@@ -30,10 +30,7 @@ public class BlinkingTextView extends FlatTextView {
         super(context, attrs, defStyle);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
+    public void startBlinking() {
         Animation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(getResources().getInteger(R.integer.blinking_text_animation_duration)); //You can manage the time of the blink with this parameter
         anim.setStartOffset(getResources().getInteger(R.integer.blinking_text_animation_offset));
@@ -41,4 +38,9 @@ public class BlinkingTextView extends FlatTextView {
         anim.setRepeatCount(Animation.INFINITE);
         this.startAnimation(anim);
     }
+
+    public void stopBlinking() {
+        this.clearAnimation();
+    }
+
 }
