@@ -54,6 +54,11 @@ public class CountDownTextView extends FlatTextView {
         mCountDownTimer.start();
     }
 
+    public void stopCountDown() {
+        if (mCountDownTimer != null)
+            mCountDownTimer.cancel();
+    }
+
     public void setCountDownListener(CountDownListener countDownListener) {
         this.countDownListener = countDownListener;
     }
