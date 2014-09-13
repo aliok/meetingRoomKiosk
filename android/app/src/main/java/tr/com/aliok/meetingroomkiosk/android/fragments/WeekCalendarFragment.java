@@ -67,8 +67,6 @@ public class WeekCalendarFragment extends Fragment {
     private List<RelativeLayout> mDayColumns;
     private List<FlatTextView> mDayColumHeaders;
 
-    // ------ values -----------------------------
-
     public static WeekCalendarFragment newInstance() {
         WeekCalendarFragment fragment = new WeekCalendarFragment();
         Bundle args = new Bundle();
