@@ -19,9 +19,11 @@ def initializeGPIO():
     # Use BCM GPIO references
     # instead of physical pin numbers
     GPIO.setmode(GPIO.BCM)
+
     # set GPIO ports
     GPIO.setup(TRIG, GPIO.OUT)
     GPIO.setup(ECHO, GPIO.IN)
+
     # ensure that the Trigger pin is set low, and give the sensor a some time to settle
     GPIO.output(TRIG, False)
     time.sleep(0.5)
@@ -35,6 +37,7 @@ def measure():
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
+
     # Now that we’ve sent our pulse signal we need to listen to our input pin, which is connected to ECHO. The sensor
     # sets ECHO to high for the amount of time it takes for the pulse to go and come back, so our code therefore needs
     # to measure the amount of time that the ECHO pin stays high. We use the “while” string to ensure that each signal
@@ -56,6 +59,7 @@ def measure():
 
     # We can now calculate the difference between the two recorded timestamps, and hence the duration of pulse.
     pulse_duration = pulse_end - pulse_start
+
     # speed of sound at sea level is the baseline as the 343m/s.
     # that is 34300 cm
     # we need to divide that with 2 since time calculated is actually time it takes for the ultrasonic pulse to
@@ -79,7 +83,7 @@ try:
     initializeGPIO()
     while True:
         measure()
-        time.sleep(0.5)
+        time.sleep(1)
 
 except KeyboardInterrupt:  # User pressed CTRL-C
     # Reset GPIO settings
