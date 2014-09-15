@@ -14,8 +14,11 @@ class HardwareMock:
         self._initialized = False
 
     def initialize_gpio(self):
-        time.sleep(0.5)  # add some wait-time to make it more realistic
+        time.sleep(0.75)  # add some wait-time to make it more realistic
         self._initialized = True
+
+    def clean_up(self):
+        self._initialized = False
 
     def measure(self):
         if not self._initialized:

@@ -1,11 +1,11 @@
 # coding=utf-8
 import logging
+import sys
 
 from meetingroomkiosk.constants import Constants
-from meetingroomkiosk.hardware import Hardware
-from meetingroomkiosk.hardware_mock import HardwareMock
 from meetingroomkiosk.heartbeat import Heartbeat
 from meetingroomkiosk.sensor_service import SensorService
+
 
 __author__ = 'ali ok'
 
@@ -30,8 +30,12 @@ class Sensor:
 
     def __init__(self):
         if MOCK_HARDWARE:
+            from meetingroomkiosk.hardware_mock import HardwareMock
+
             self._hardware = HardwareMock()
         else:
+            from meetingroomkiosk.hardware import Hardware
+
             self._hardware = Hardware()
 
         # TODO if MOCK_DATA
@@ -44,7 +48,7 @@ class Sensor:
         self._threshold2 = None  # TODO
 
     def _start(self):
-        log.log("Starting program...")
+        log.info("Starting program...")
         # TODO
         # first of all, check all the required settings and then start measuring
         # during that, if server settings are all good, send a heartbeat about starting the sensor program
@@ -57,9 +61,9 @@ class Sensor:
             self._hardware.initialize_gpio()
         except:
             # do not care about clean up, since hardware does it itself
-            log.critical("Unable to initialize hardware GPIO. Exiting program!")  # TODO: log exception as well
+            log.exception("Unable to initialize hardware GPIO. Exiting program!")  # TODO: log exception as well
             # send heartbeat die with message
-            self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Unable to initialize GPIO.")  # TODO: with exception
+            self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Unable to initialize GPIO.", sys.exc_info())
             return
 
         # send the sync heartbeat afterwards to not to mix GPIO initialization exceptions with heartbeat exceptions
@@ -76,9 +80,9 @@ class Sensor:
             except:
                 # do not care about clean up, since hardware itself does it
                 # update heartbeat status so that server knows there is something wrong with the measurement
-                self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Error during measure.")  # TODO with exception
+                self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Error during measure.", sys.exc_info())
                 # since long time if that is the case
-                log.error("Error during measurement!")  # TODO with exception
+                log.exception("Error during measurement!")
                 # re-raise and eventually exit the program
                 raise
 
@@ -86,25 +90,25 @@ class Sensor:
                 if distance >= self._threshold2:
                     # we have event type 1
                     event_type = Constants.EVENT_TYPE_OBJECT_WITHIN_THRESHOLD1
-                    log.info("Object found between threshold1 and threshold2 : " + distance)
+                    log.info("Object found between threshold1 and threshold2 : {}".format(distance))
                     # TODO
                     pass
                 else:
                     # we might have event type 2. but need to check if object is too close
                     if distance <= Constants.TOO_CLOSE_DISTANCE_THRESHOLD:
                         # ignore
-                        log.info("Object is too close : " + distance)
+                        log.info("Object is too close : {}".format(distance))
                         # TODO
                         pass
                     else:
                         # we have event type 2
-                        log.info("Object is withing threshold2 and it is not too close : " + distance)
+                        log.info("Object is withing threshold2 and it is not too close : {}".format(distance))
                         event_type = Constants.EVENT_TYPE_OBJECT_WITHIN_THRESHOLD2
                         # TODO
                         pass
             else:
                 # ignore the object since it is too far away
-                log.info("Object is too far away : " + distance)
+                log.info("Object is too far away : {}".format(distance))
                 pass
 
             try:
@@ -114,7 +118,7 @@ class Sensor:
                     log.info("Gonna broadcast event : " + event_type)
                     self._sensor_service.broadcastEvent(event_type)
             except:
-                log.error("Error broadcasting event : " + event_type)  # TODO log exception as well
+                log.exception("Error broadcasting event : " + event_type)
                 pass  # TODO
 
                 # TODO : sleep some time before measuring again
@@ -133,5 +137,14 @@ class Sensor:
         except:
             # catch all unhandled exceptions
             # that means, program wanted to terminate
-            log.critical("Program didn't handle the exception. Probably it wanted termination.")  # log error exception
+            log.exception("Program didn't handle the exception. Probably it wanted termination.")
             self._on_exit()
+
+
+def main():
+    sensor = Sensor()
+    sensor.start_program()
+
+
+if __name__ == "__main__":
+    main()

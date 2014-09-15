@@ -17,7 +17,7 @@ class Heartbeat:
         # TODO: start the background thread
         pass
 
-    def sendSync(self, type, message=None, exception=None):
+    def sendSync(self, type, message=None, exc_info=None):
         # TODO
         pass
 

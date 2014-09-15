@@ -2,9 +2,6 @@
 
 __author__ = 'ali ok'
 
-MOCK_DATA = True
-
-
 class SensorService:
     # TODO: document me
     """
