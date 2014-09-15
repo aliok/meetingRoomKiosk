@@ -51,17 +51,19 @@ class Sensor:
 
         self._heartbeat.sendSync(Constants.HEARTBEAT_STARTING)
 
-        # initalize hardware.
+        # initialize hardware.
         try:
             log.info("Initializing hardware GPIO...")
             self._hardware.initialize_gpio()
-            self._heartbeat.sendSync(Constants.HEARTBEAT_GPIO_INITIALIZED)
         except:
             # do not care about clean up, since hardware does it itself
             log.critical("Unable to initialize hardware GPIO. Exiting program!")  # TODO: log exception as well
             # send heartbeat die with message
             self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Unable to initialize GPIO.")  # TODO: with exception
             return
+
+        # send the sync heartbeat afterwards to not to mix GPIO initialization exceptions with heartbeat exceptions
+        self._heartbeat.sendSync(Constants.HEARTBEAT_GPIO_INITIALIZED)
 
         # start heartbeat here
         self._heartbeat.start_heartbeat_thread()
@@ -72,11 +74,13 @@ class Sensor:
             try:
                 distance = self._hardware.measure()
             except:
-                # TODO: measure method cleans up if there is an error
                 # do not care about clean up, since hardware itself does it
-                # TODO: update heartbeat status so that server knows there is something wrong with the measurement
+                # update heartbeat status so that server knows there is something wrong with the measurement
+                self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Error during measure.")  # TODO with exception
                 # since long time if that is the case
-                log.error("Error during measurement!")
+                log.error("Error during measurement!")  # TODO with exception
+                # re-raise and eventually exit the program
+                raise
 
             if distance < self._threshold1:
                 if distance >= self._threshold2:
@@ -86,7 +90,7 @@ class Sensor:
                     # TODO
                     pass
                 else:
-                    # we might have event type 2. but need to check if it is too close
+                    # we might have event type 2. but need to check if object is too close
                     if distance <= Constants.TOO_CLOSE_DISTANCE_THRESHOLD:
                         # ignore
                         log.info("Object is too close : " + distance)
