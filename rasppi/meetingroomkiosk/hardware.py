@@ -48,7 +48,7 @@ class Hardware:
         except:
             # catch all.
             # see http://stackoverflow.com/questions/730764/try-except-in-python-how-to-properly-ignore-exceptions
-            self._clean_up()
+            self.clean_up()
             raise  # re-raise it!
 
     def measure(self):
@@ -72,12 +72,12 @@ class Hardware:
         except:
             # catch all.
             # see http://stackoverflow.com/questions/730764/try-except-in-python-how-to-properly-ignore-exceptions
-            self._clean_up()
+            self.clean_up()
             raise  # re-raise it!
 
-    def _clean_up(self):
+    def clean_up(self):
         """
-        Cleans up GPIO and marks it as uninitialized.
+        Cleans up GPIO and marks it as uninitialized. You must call this if program needs to shutdown for any reason.
         """
         # Reset GPIO settings
         GPIO.cleanup()
