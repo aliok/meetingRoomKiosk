@@ -1,5 +1,7 @@
 # coding=utf-8
 import logging
+# see http://stackoverflow.com/questions/2234982/why-both-import-logging-and-import-logging-config-are-needed
+import logging.config
 import sys
 
 from meetingroomkiosk.constants import Constants
@@ -12,8 +14,43 @@ __author__ = 'ali ok'
 MOCK_DATA = True
 MOCK_HARDWARE = True
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)  # TODO try to have a rolling log so that the log size doesn't exceed some days
+# have rolling log files
+# see http://victorlin.me/posts/2012/08/26/good-logging-practice-in-python
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,  # this fixes the problem
+
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': "standard",
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': "standard",
+            'filename': "sensor.log",
+            'maxBytes': 10485760,  # 10 MB
+            'backupCount': 100,  # last 100 files
+            'encoding': "utf8"
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True
+        }
+    }
+})
+
+log = logging.getLogger(__name__)
 
 
 class Sensor:
@@ -61,7 +98,7 @@ class Sensor:
             self._hardware.initialize_gpio()
         except:
             # do not care about clean up, since hardware does it itself
-            log.exception("Unable to initialize hardware GPIO. Exiting program!")  # TODO: log exception as well
+            log.exception("Unable to initialize hardware GPIO. Exiting program!")
             # send heartbeat die with message
             self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Unable to initialize GPIO.", sys.exc_info())
             return
