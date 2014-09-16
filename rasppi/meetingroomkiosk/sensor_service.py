@@ -2,6 +2,7 @@
 
 __author__ = 'ali ok'
 
+
 class SensorService:
     # TODO: document me
     """
@@ -12,6 +13,13 @@ class SensorService:
         pass
 
     def broadcastEvent(self, event_type):
+        # TODO
+        # TODO: check token existence first
+        # TODO: very short timeout!
+        # TODO: make short timeout application wide
+        pass
+
+    def set_token(self, token):
         # TODO
         pass
 

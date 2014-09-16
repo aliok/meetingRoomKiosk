@@ -3,10 +3,14 @@ import logging
 # see http://stackoverflow.com/questions/2234982/why-both-import-logging-and-import-logging-config-are-needed
 import logging.config
 import sys
+import time
 
 from meetingroomkiosk.constants import Constants
 from meetingroomkiosk.heartbeat import Heartbeat
+from meetingroomkiosk.registration_service import RegistrationService
+from meetingroomkiosk.registration_service_mock import RegistrationServiceMock
 from meetingroomkiosk.sensor_service import SensorService
+from meetingroomkiosk.sensor_service_mock import SensorServiceMock
 
 
 __author__ = 'ali ok'
@@ -75,24 +79,43 @@ class Sensor:
 
             self._hardware = Hardware()
 
-        # TODO if MOCK_DATA
-        self._sensor_service = SensorService()
+        if MOCK_DATA:
+            self._sensor_service = SensorServiceMock()
+        else:
+            self._sensor_service = SensorService()
+
+        if MOCK_DATA:
+            self._registration_service = RegistrationServiceMock()
+        else:
+            self._registration_service = RegistrationService()
 
         # TODO if MOCK_DATA
         self._heartbeat = Heartbeat()
 
-        self._threshold1 = None  # TODO
-        self._threshold2 = None  # TODO
-
     def _start(self):
         log.info("Starting program...")
-        # TODO
-        # first of all, check all the required settings and then start measuring
-        # during that, if server settings are all good, send a heartbeat about starting the sensor program
 
+        # first of all, check all the required settings
+        # noinspection PyBroadException
+        try:
+            self._sensor_info = self._registration_service.get_sensor_info_sync()
+        except:
+            log.exception("Unable to register! Exiting program")
+            return
+
+        if not self._sensor_info:
+            log.critical("Unable to get sensor info. Exiting program!")
+
+        # give the token to services
+        self._sensor_service.set_token(self._sensor_info.token)
+        self._registration_service.set_token(self._sensor_info.token)
+        self._heartbeat.set_token(self._sensor_info.token)
+
+        # since server settings are all good, send a heartbeat about starting the sensor program
         self._heartbeat.sendSync(Constants.HEARTBEAT_STARTING)
 
         # initialize hardware.
+        # noinspection PyBroadException
         try:
             log.info("Initializing hardware GPIO...")
             self._hardware.initialize_gpio()
@@ -123,31 +146,26 @@ class Sensor:
                 # re-raise and eventually exit the program
                 raise
 
-            if distance < self._threshold1:
-                if distance >= self._threshold2:
+            if distance < self._sensor_info.threshold1:
+                if distance >= self._sensor_info.threshold2:
                     # we have event type 1
                     event_type = Constants.EVENT_TYPE_OBJECT_WITHIN_THRESHOLD1
                     log.info("Object found between threshold1 and threshold2 : {}".format(distance))
-                    # TODO
-                    pass
                 else:
                     # we might have event type 2. but need to check if object is too close
                     if distance <= Constants.TOO_CLOSE_DISTANCE_THRESHOLD:
                         # ignore
                         log.info("Object is too close : {}".format(distance))
-                        # TODO
-                        pass
                     else:
                         # we have event type 2
                         log.info("Object is withing threshold2 and it is not too close : {}".format(distance))
                         event_type = Constants.EVENT_TYPE_OBJECT_WITHIN_THRESHOLD2
-                        # TODO
-                        pass
             else:
                 # ignore the object since it is too far away
                 log.info("Object is too far away : {}".format(distance))
                 pass
 
+            # noinspection PyBroadException
             try:
                 # TODO: do not send it every time!
                 # TODO: do it in background
@@ -156,9 +174,15 @@ class Sensor:
                     self._sensor_service.broadcastEvent(event_type)
             except:
                 log.exception("Error broadcasting event : " + event_type)
-                pass  # TODO
+                # do nothing. continue with the next measurement
 
-                # TODO : sleep some time before measuring again
+            # sleep some time before measuring again
+            if event_type:
+                # if we do broadcast, then sleep less since some time will be gone during the REST call
+                time.sleep(0.2)
+            else:
+                # sleep more
+                time.sleep(0.75)
 
     def _on_exit(self):
         # try to clean up anyway. it is safe to do that over and over again
