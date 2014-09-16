@@ -147,7 +147,7 @@ class Sensor:
                 if distance >= self._sensor_info.threshold2:
                     # we have event type 1
                     event_type = Constants.EVENT_TYPE_OBJECT_WITHIN_THRESHOLD1
-                    log.info("Object found between threshold1 and threshold2 : {}".format(distance))
+                    log.info("Object found between threshold1 and threshold2 : {} cm".format(distance))
                 else:
                     # we might have event type 2. but need to check if object is too close
                     if distance <= Constants.TOO_CLOSE_DISTANCE_THRESHOLD:
@@ -155,11 +155,11 @@ class Sensor:
                         log.info("Object is too close : {}".format(distance))
                     else:
                         # we have event type 2
-                        log.info("Object is withing threshold2 and it is not too close : {}".format(distance))
+                        log.info("Object is withing threshold2 and it is not too close : {} cm".format(distance))
                         event_type = Constants.EVENT_TYPE_OBJECT_WITHIN_THRESHOLD2
             else:
                 # ignore the object since it is too far away
-                log.info("Object is too far away : {}".format(distance))
+                log.info("Object is too far away : {} cm".format(distance))
                 pass
 
             # noinspection PyBroadException
