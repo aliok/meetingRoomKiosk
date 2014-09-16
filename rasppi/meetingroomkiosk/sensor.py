@@ -7,6 +7,7 @@ import time
 
 from meetingroomkiosk.constants import Constants
 from meetingroomkiosk.heartbeat import Heartbeat
+from meetingroomkiosk.heartbeat_mock import HeartbeatMock
 from meetingroomkiosk.registration_service import RegistrationService
 from meetingroomkiosk.registration_service_mock import RegistrationServiceMock
 from meetingroomkiosk.sensor_service import SensorService
@@ -81,16 +82,12 @@ class Sensor:
 
         if MOCK_DATA:
             self._sensor_service = SensorServiceMock()
+            self._registration_service = RegistrationServiceMock()
+            self._heartbeat = HeartbeatMock()
         else:
             self._sensor_service = SensorService()
-
-        if MOCK_DATA:
-            self._registration_service = RegistrationServiceMock()
-        else:
             self._registration_service = RegistrationService()
-
-        # TODO if MOCK_DATA
-        self._heartbeat = Heartbeat()
+            self._heartbeat = Heartbeat()
 
     def _start(self):
         log.info("Starting program...")
