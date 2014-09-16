@@ -1,8 +1,7 @@
 # coding=utf-8
 import logging
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)  # TODO try to have a rolling log so that the log size doesn't exceed some days
+log = logging.getLogger(__name__)
 
 
 class Heartbeat:
