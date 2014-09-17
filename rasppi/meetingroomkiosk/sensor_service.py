@@ -17,6 +17,7 @@ class SensorService:
         # TODO: check token existence first
         # TODO: very short timeout!
         # TODO: make short timeout application wide
+        # TODO: do it in synchronously
         pass
 
     def set_token(self, token):

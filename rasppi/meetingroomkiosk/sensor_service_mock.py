@@ -17,6 +17,7 @@ class SensorServiceMock:
 
     def broadcastEvent(self, event_type):
         log.info("Mock broadcast : " + event_type)
+        # TODO: add sleep time to make it more realistic
 
     def set_token(self, token):
         log.info("Mock token set : " + token)

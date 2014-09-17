@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import datetime
 import logging
 # see http://stackoverflow.com/questions/2234982/why-both-import-logging-and-import-logging-config-are-needed
 import logging.config
@@ -89,6 +90,12 @@ class Sensor:
             self._registration_service = RegistrationService()
             self._heartbeat = Heartbeat()
 
+    @staticmethod
+    def _current_time_in_millis():
+        # see http://stackoverflow.com/questions/5998245/get-current-time-in-milliseconds-in-python
+        # about getting the current time in millis
+        return int(round(time.time() * 1000))
+
     def _start(self):
         log.info("Starting program...")
 
@@ -129,6 +136,9 @@ class Sensor:
         # start heartbeat here
         self._heartbeat.start_heartbeat_thread()
 
+        previous_broadcasted_event_type = None
+        previous_broadcasted_event_time = 0
+
         # start measuring
         while True:
             event_type = None
@@ -162,11 +172,30 @@ class Sensor:
                 log.info("Object is too far away : {} cm".format(distance))
                 pass
 
+            # do not broadcast the event every time!
+            # broadcast the event if it is new.
+            # new means:
+            # last broadcasted event is from a different type
+            # OR
+            # it has been N seconds since last broadcasted event
+            send_broadcast = False
+
+            if not event_type:
+                send_broadcast = False
+            else:
+                if previous_broadcasted_event_type != event_type:
+                    send_broadcast = True
+                else:
+                    elapsed_time_since_last_broadcast = Sensor._current_time_in_millis() - previous_broadcasted_event_time
+                    if elapsed_time_since_last_broadcast > self._sensor_info.seconds_to_ignore_same_events * 1000:
+                        send_broadcast = True
+                    else:
+                        log.info(
+                            "Not broadcasting the event since same type is broadcasted very recently : " + event_type)
+
             # noinspection PyBroadException
             try:
-                # TODO: do not send it every time!
-                # TODO: do it in background
-                if event_type:
+                if send_broadcast:
                     log.info("Gonna broadcast event : " + event_type)
                     self._sensor_service.broadcastEvent(event_type)
             except:
@@ -174,7 +203,9 @@ class Sensor:
                 # do nothing. continue with the next measurement
 
             # sleep some time before measuring again
-            if event_type:
+            if send_broadcast:
+                previous_broadcasted_event_type = event_type
+                previous_broadcasted_event_time = Sensor._current_time_in_millis()
                 # if we do broadcast, then sleep less since some time will be gone during the REST call
                 time.sleep(0.2)
             else:
@@ -190,6 +221,7 @@ class Sensor:
         self._heartbeat.sendSync(Constants.HEARTBEAT_DIE, "Exiting program")
 
     def start_program(self):
+        # noinspection PyBroadException
         try:
             self._start()
         except:

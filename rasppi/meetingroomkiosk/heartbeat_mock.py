@@ -17,6 +17,7 @@ class HeartbeatMock:
     def sendSync(self, type, message=None, exc_info=None):
         # TODO
         # TODO: check token first
+        # TODO: add sleep time to make it more realistic
         pass
 
     def stop_heartbeat_thread(self):
