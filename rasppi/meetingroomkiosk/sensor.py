@@ -207,10 +207,10 @@ class Sensor:
                 previous_broadcasted_event_type = event_type
                 previous_broadcasted_event_time = Sensor._current_time_in_millis()
                 # if we do broadcast, then sleep less since some time will be gone during the REST call
-                time.sleep(0.2)
+                time.sleep(Constants.SLEEP_TIME_BEFORE_NEXT_MEASUREMENT_AFTER_BROADCAST)
             else:
                 # sleep more
-                time.sleep(0.75)
+                time.sleep(Constants.SLEEP_TIME_BEFORE_NEXT_MEASUREMENT_NO_BROADCAST)
 
     def _on_exit(self):
         # try to clean up anyway. it is safe to do that over and over again
