@@ -1,5 +1,6 @@
 # coding=utf-8
 import logging
+import time
 from meetingroomkiosk.server_info import SensorInfo
 
 __author__ = 'ali ok'
@@ -18,7 +19,10 @@ class RegistrationServiceMock:
 
     def get_sensor_info_sync(self):
         log.info("Mock get_sensor_info_sync")
-        # TODO: add sleep time to make it more realistic
+
+        # add sleep time to make it more realistic
+        time.sleep(0.5)
+
         return SensorInfo({'token': 'TOKEN', 'threshold1': 300, 'threshold2': 150, 'secondsToIgnoreSameEvents': 5})
 
     def set_token(self, token):

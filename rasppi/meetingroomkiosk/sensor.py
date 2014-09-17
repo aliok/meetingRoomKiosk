@@ -1,5 +1,4 @@
 # coding=utf-8
-from datetime import datetime
 import logging
 # see http://stackoverflow.com/questions/2234982/why-both-import-logging-and-import-logging-config-are-needed
 import logging.config

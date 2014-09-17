@@ -30,11 +30,16 @@ class HardwareMock:
         series = HardwareMock._event_series_7()
 
         if self._currentEventSeriesIndex >= len(series):
+            # add sleep time to make it more realistic
             time.sleep(0.3)
             raise Exception("End of series")
         else:
             return_value = series[self._currentEventSeriesIndex]
             self._currentEventSeriesIndex += 1
+
+            # add sleep time to make it more realistic
+            time.sleep(0.5)
+
             return return_value
 
     @staticmethod
