@@ -4,23 +4,28 @@ __author__ = 'ali ok'
 
 
 class SensorService:
-    # TODO: document me
     """
+    Provides services for interacting the server side.
     """
-
 
     def __init__(self):
-        pass
+        self._token = None
 
-    def broadcastEvent(self, event_type):
-        # TODO
-        # TODO: check token existence first
+    def broadcast_event(self, event_type):
+        """
+        Sends a synchronous request to server about passed event.
+        """
+        # TODO : fill
+
+        # check token existence first
+        if not self._token:
+            raise Exception("No token set!")
+
         # TODO: very short timeout!
         # TODO: make short timeout application wide
         # TODO: do it in synchronously
         pass
 
     def set_token(self, token):
-        # TODO
-        pass
+        self._token = token
 

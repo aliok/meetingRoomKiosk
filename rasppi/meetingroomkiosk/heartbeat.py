@@ -25,6 +25,7 @@ class Heartbeat:
     def stop_heartbeat_thread(self):
         # TODO
         # TODO: check token first
+        # TODO: send Constants.HEARTBEAT_OPERATIONAL regularly
         pass
 
     def set_token(self, token):

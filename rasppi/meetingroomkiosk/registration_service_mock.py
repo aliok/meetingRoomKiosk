@@ -24,7 +24,3 @@ class RegistrationServiceMock:
         time.sleep(0.5)
 
         return SensorInfo({'token': 'TOKEN', 'threshold1': 300, 'threshold2': 150, 'secondsToIgnoreSameEvents': 5})
-
-    def set_token(self, token):
-        log.info("Mock token set : " + token)
-

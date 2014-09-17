@@ -16,8 +16,3 @@ class RegistrationService:
         # TODO read the credentials and some other information from a file
         # TODO
         pass
-
-    def set_token(self, token):
-        # TODO
-        pass
-

@@ -111,7 +111,6 @@ class Sensor:
 
         # give the token to services
         self._sensor_service.set_token(self._sensor_info.token)
-        self._registration_service.set_token(self._sensor_info.token)
         self._heartbeat.set_token(self._sensor_info.token)
 
         # since server settings are all good, send a heartbeat about starting the sensor program
@@ -196,7 +195,7 @@ class Sensor:
             try:
                 if send_broadcast:
                     log.info("Gonna broadcast event : " + event_type)
-                    self._sensor_service.broadcastEvent(event_type)
+                    self._sensor_service.broadcast_event(event_type)
             except:
                 log.exception("Error broadcasting event : " + event_type)
                 # do nothing. continue with the next measurement
