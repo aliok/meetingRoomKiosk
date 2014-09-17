@@ -15,4 +15,6 @@ public interface DisplayManager {
     String registerDisplay(Display display, String gcmRegistrationId, Room room);
 
     Display findByToken(String token);
+
+    Display findByRoomKey(String roomKey);
 }

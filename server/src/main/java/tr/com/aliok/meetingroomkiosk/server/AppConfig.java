@@ -7,7 +7,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
 import tr.com.aliok.meetingroomkiosk.server.manager.*;
+import tr.com.aliok.meetingroomkiosk.server.service.GoogleCloudMessagingRestClient;
+import tr.com.aliok.meetingroomkiosk.server.service.GoogleCloudMessagingServices;
+import tr.com.aliok.meetingroomkiosk.server.service.GoogleCloudMessagingServicesImpl;
 
 /**
  * @author Ali Ok (ali.ok@apache.org)
@@ -28,6 +33,30 @@ public class AppConfig {
     @Bean
     public SensorManager sensorManager() {
         return new SensorManagerImpl();
+    }
+
+    @Bean
+    public GoogleCloudMessagingServices googleCloudMessagingServices() {
+        return new GoogleCloudMessagingServicesImpl();
+    }
+
+    @Bean
+    public GoogleCloudMessagingRestClient googleCloudMessagingRestClient() {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestFacade request) {
+                // set http header according to http://developer.android.com/google/gcm/http.html
+                request.addHeader("Content-Type", "application/json");
+                request.addHeader("Authorization","key=" + 123);        //TODO
+            }
+        };
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("https://android.googleapis.com")
+                .setRequestInterceptor(requestInterceptor)
+                .build();
+
+        return restAdapter.create(GoogleCloudMessagingRestClient.class);
     }
 
     // override bean definition from HttpMessageConvertersAutoConfiguration

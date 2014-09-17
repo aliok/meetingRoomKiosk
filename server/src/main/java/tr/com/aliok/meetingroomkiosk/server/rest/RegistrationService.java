@@ -13,6 +13,8 @@ import tr.com.aliok.meetingroomkiosk.server.model.Room;
 import tr.com.aliok.meetingroomkiosk.server.model.Sensor;
 
 /**
+ * Provides non-application-logic related functions for client devices.
+ *
  * @author Ali Ok (ali.ok@apache.org)
  */
 @RestController
@@ -86,4 +88,9 @@ public class RegistrationService {
 
         return sensor;
     }
+
+    // TODO: implement with go-live
+//    public boolean isSensorForDisplayOnline(){
+//
+//    }
 }

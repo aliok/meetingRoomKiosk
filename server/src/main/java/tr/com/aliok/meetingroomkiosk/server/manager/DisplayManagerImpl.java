@@ -27,4 +27,12 @@ public class DisplayManagerImpl implements DisplayManager {
         else
             return null;
     }
+
+    @Override
+    public Display findByRoomKey(String roomKey) {
+        if ("ROOM1".equals(roomKey))
+            return sampleData.display1;
+        else
+            return null;
+    }
 }
