@@ -1,5 +1,6 @@
 package tr.com.aliok.meetingroomkiosk.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import tr.com.aliok.meetingroomkiosk.model.api.DisplayModel;
 
 /**
@@ -10,6 +11,7 @@ public class Display implements DisplayModel {
     private String displayKey;
     private Room room;
     private Sensor sensor;
+    private String gcmRegistrationId;
 
     @Override
     public String getDisplayKey() {
@@ -26,10 +28,16 @@ public class Display implements DisplayModel {
         return sensor;
     }
 
+    @JsonIgnore
+    public String getGcmRegistrationId() {
+        return gcmRegistrationId;
+    }
+
     public static class Builder {
         private String displayKey;
         private Room room;
         private Sensor sensor;
+        private String gcmRegistrationId;
 
         public Builder setDisplayKey(String displayKey) {
             this.displayKey = displayKey;
@@ -46,11 +54,17 @@ public class Display implements DisplayModel {
             return this;
         }
 
+        public Builder setGcmRegistrationId(String gcmRegistrationId) {
+            this.gcmRegistrationId = gcmRegistrationId;
+            return this;
+        }
+
         public Display create() {
             final Display display = new Display();
             display.displayKey = this.displayKey;
             display.room = this.room;
             display.sensor = this.sensor;
+            display.gcmRegistrationId = this.gcmRegistrationId;
             return display;
         }
     }

@@ -47,7 +47,7 @@ public class AppConfig {
             public void intercept(RequestFacade request) {
                 // set http header according to http://developer.android.com/google/gcm/http.html
                 request.addHeader("Content-Type", "application/json");
-                request.addHeader("Authorization","key=" + 123);        //TODO
+                request.addHeader("Authorization","key=" + SystemPropertyUtils.getGoogleCloudMessagingAPIKey());
             }
         };
 

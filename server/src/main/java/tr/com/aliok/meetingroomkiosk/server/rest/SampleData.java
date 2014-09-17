@@ -180,6 +180,7 @@ public class SampleData {
             .setDisplayKey("DISPLAY1")
             .setRoom(room1)
             .setSensor(sensor1)
+            .setGcmRegistrationId("APA91bHVxLWuGHEennjSRhbVdkeoCwsP7Af-sIy_X8E044FNsCc8og1tmrKVqLHAKV9XNp8pJljRDT6SKzzTSzq4SrHAAuf0zEkUCbZ_yZpcMaEmJu0ODCpfn70cUIoJTSMP5VF4IBv631aLvURbjpyI_g3LtXrt-XKi94gjhFYOK-xZb9d6U-E")
             .create();
 
     public final ScheduleInformation scheduleInformation = new ScheduleInformation.Builder()
