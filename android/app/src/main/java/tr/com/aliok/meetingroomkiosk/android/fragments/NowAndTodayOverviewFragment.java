@@ -103,6 +103,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
         Log.d(TAG, "Detaching NowAndTodayOverviewFragment");
         activityContract.setNowAndTodayOverviewFragment(null);
         activityContract = null;
+        mCountDownTextView.stopCountDown();
     }
 
     public void dataArrived() {
@@ -112,6 +113,8 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
     private void doRefreshViewWithDataFromActivity() {
         final Event currentEvent = activityContract.getCurrentEvent();
         final List<Event> upcomingEvents = activityContract.getUpcomingEvents();
+
+        mCountDownTextView.stopCountDown();
 
         // perhaps the fragment is created but the data request of activity is not done yet!
         // so, check if activity received the data
@@ -160,6 +163,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
 
             // show event detail fragment
             mCurrentEventDetailFragment.setVisibility(View.VISIBLE);
+//            mCurrentEventDetailFragment.updateFragmentWithEvent(currentEvent);
 
             // update banner text and style
             mCurrentOrNextEventBannerTextView.setText(getResources().getText(R.string.session_in_progress));

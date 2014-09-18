@@ -1,10 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".OverviewActivity" >
+    tools:context=".OverviewActivity">
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <!--following is just for debugging purposes and hidden by default-->
+    <item
+        android:id="@+id/action_bttf"
+        android:icon="@drawable/ic_action_send"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/back_to_the_future"
+        android:visible="false"
+        />
+
+    <item
+        android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        />
+        android:title="@string/action_settings" />
 </menu>

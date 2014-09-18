@@ -30,8 +30,8 @@ import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
 import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
 import tr.com.aliok.meetingroomkiosk.android.service.ServiceContext;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
-import tr.com.aliok.meetingroomkiosk.android.util.DeLorean;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
+import tr.com.aliok.meetingroomkiosk.android.util.DeLorean;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
 
@@ -319,6 +319,8 @@ public class OverviewActivity extends FragmentActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.overview, menu);
+        if (Constants.MOCK_DATA)
+            menu.findItem(R.id.action_bttf).setVisible(true);
         return true;
     }
 
@@ -330,6 +332,16 @@ public class OverviewActivity extends FragmentActivity implements
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             goToSettings();
+            return true;
+        } else if (id == R.id.action_bttf) {
+            if (!Constants.MOCK_DATA){
+                Toast.makeText(this, "This button is for development purposes only!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+
+            refresh();
+            Toast.makeText(this, "Advanced time to " + DeLorean.now(), Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);

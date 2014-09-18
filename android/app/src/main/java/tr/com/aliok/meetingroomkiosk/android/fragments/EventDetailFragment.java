@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+
+import com.cengalabs.flatui.views.FlatTextView;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
@@ -20,22 +23,13 @@ public class EventDetailFragment extends Fragment {
 
     private Event event;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param event event to show details.
-     * @return A new instance of fragment EventDetailFragment.
-     */
-    public static EventDetailFragment newInstance(Event event) {
-        EventDetailFragment fragment = new EventDetailFragment();
+    // ------ component bindings -----------------
+    private FlatTextView mTimeRangeTextView;
+    private FlatTextView mTitleTextView;
+    private FlatTextView mDescriptionTextView;
+    private FlatTextView mOrganizerTextView;
+    private GridLayout mAttendeesGridLayout;
 
-        //TODO
-//        Bundle args = new Bundle();
-//        args.putParcelable(ARG_EVENT, event);
-//        fragment.setArguments(args);
-        return fragment;
-    }
 
     public EventDetailFragment() {
         // Required empty public constructor
@@ -44,6 +38,7 @@ public class EventDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
 
             // TODO
@@ -55,7 +50,24 @@ public class EventDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_event_detail, container, false);
+        final View view = inflater.inflate(R.layout.fragment_event_detail, container, false);
+
+        // this is the moment to bind components, not before
+        bindComponents(view);
+
+        return view;
+    }
+
+    private void bindComponents(View view) {
+        this.mTimeRangeTextView = (FlatTextView) view.findViewById(R.id.timeRangeTextView);
+        this.mTitleTextView = (FlatTextView) view.findViewById(R.id.titleTextView);
+        this.mDescriptionTextView = (FlatTextView) view.findViewById(R.id.descriptionTextView);
+        this.mOrganizerTextView = (FlatTextView) view.findViewById(R.id.organizerLabelTextView);
+        this.mAttendeesGridLayout = (GridLayout) view.findViewById(R.id.attendeesGridLayout);
+    }
+
+    public void updateFragmentWithEvent(Event event) {
+
     }
 
     @Override
