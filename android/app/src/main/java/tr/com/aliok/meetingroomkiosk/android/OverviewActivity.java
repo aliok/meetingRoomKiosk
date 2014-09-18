@@ -30,11 +30,12 @@ import tr.com.aliok.meetingroomkiosk.android.model.PeriodSchedule;
 import tr.com.aliok.meetingroomkiosk.android.model.ScheduleInformation;
 import tr.com.aliok.meetingroomkiosk.android.service.ServiceContext;
 import tr.com.aliok.meetingroomkiosk.android.util.AppUtils;
-import tr.com.aliok.meetingroomkiosk.android.util.Clock;
+import tr.com.aliok.meetingroomkiosk.android.util.DeLorean;
 import tr.com.aliok.meetingroomkiosk.android.util.CommonUtils;
 import tr.com.aliok.meetingroomkiosk.android.util.SharedPrefsUtils;
 import tr.com.aliok.meetingroomkiosk.model.api.PeriodType;
 
+import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
 
 /**
  * Default activity of the application. Displays an overview of the events.
@@ -65,6 +66,7 @@ public class OverviewActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Creating OverviewActivity");
 
         // this is required for displaying the "loading circle" on action bar
         // see http://stackoverflow.com/questions/20280843/android-progress-bar-under-actionbar-and-remove-circle-progress
@@ -168,6 +170,7 @@ public class OverviewActivity extends FragmentActivity implements
     protected void onResume() {
         // TODO: receive special parameter from GcmIntentService about the GCM message
         super.onResume();
+        Log.d(TAG, "Resuming OverviewActivity");
 
         // Check device for Play Services APK.
         // need to check it again on resume
@@ -246,7 +249,7 @@ public class OverviewActivity extends FragmentActivity implements
             } else if (PeriodType.DAY.equals(periodSchedule.getPeriod().getPeriodType())) {
                 // extract day schedule
 
-                final Date now = Clock.now();
+                final Date now = DeLorean.now();
                 final List<Event> eventsOfToday = periodSchedule.getSchedule().getEvents();
                 final List<Event> eventsStartAfterNow = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
                     @Override
@@ -339,7 +342,19 @@ public class OverviewActivity extends FragmentActivity implements
 
     @Override
     public void refresh() {
-        //TODO : refresh views with current scheduleInformation. do not fetch the data again immediately. do it in the background.
+        if (Constants.MOCK_DATA)
+            DeLorean.advanceTime();
+
+        // refresh views with current scheduleInformation. do not fetch the data again immediately. do it in the background.
+
+        // do following to extract current event and upcoming events from the current schedule information
+        extractDataFromScheduleInformation();
+
+        // update views with extracted data
+        notifyFragmentWithDataArrivalIfTheyAreAttached();
+
+        // then, go fetch the data and do the same again
+        fetchScheduleInformation();
     }
 
     @Override

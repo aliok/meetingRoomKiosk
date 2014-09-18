@@ -3,6 +3,7 @@ package tr.com.aliok.meetingroomkiosk.android.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.components.BlinkingTextView;
 import tr.com.aliok.meetingroomkiosk.android.components.CountDownTextView;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
+
+import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
 
 /**
  * Fragment for displaying current session tab. It includes detail for current session (or next session)
@@ -85,6 +88,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(TAG, "Attaching NowAndTodayOverviewFragment");
         try {
             activityContract = (ActivityContract) activity;
             activityContract.setNowAndTodayOverviewFragment(this);
@@ -96,6 +100,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
     @Override
     public void onDetach() {
         super.onDetach();
+        Log.d(TAG, "Detaching NowAndTodayOverviewFragment");
         activityContract.setNowAndTodayOverviewFragment(null);
         activityContract = null;
     }

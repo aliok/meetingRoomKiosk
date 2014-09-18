@@ -10,7 +10,7 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import java.util.Date;
 
-import tr.com.aliok.meetingroomkiosk.android.util.Clock;
+import tr.com.aliok.meetingroomkiosk.android.util.DeLorean;
 
 /**
  * Displays a countdown timer which updates remaining time every second.
@@ -39,7 +39,7 @@ public class CountDownTextView extends FlatTextView {
             mCountDownTimer.cancel();
 
         // start new countdown
-        mCountDownTimer = new CountDownTimer(untilTime.getTime() - Clock.nowMs(), DEFAULT_COUNT_DOWN_INTERVAL) {
+        mCountDownTimer = new CountDownTimer(untilTime.getTime() - DeLorean.nowMs(), DEFAULT_COUNT_DOWN_INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
                 setText(DurationFormatUtils.formatDuration(millisUntilFinished, "H:mm:ss"));
