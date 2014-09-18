@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
+
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
  * {@code GcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
@@ -27,7 +29,6 @@ public class GcmIntentService extends IntentService {
     public GcmIntentService() {
         super("GcmIntentService");
     }
-    public static final String TAG = "GCM Demo";
 
     @Override
     protected void onHandleIntent(Intent intent) {
