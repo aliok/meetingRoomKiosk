@@ -24,7 +24,7 @@
                 android:id="@+id/currentOrNextEventBannerTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
+                android:layout_weight="4"
                 android:textSize="30sp"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
