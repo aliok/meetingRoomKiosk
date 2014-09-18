@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
-    tools:context=".EventDetailFragment">
+    tools:context=".EventDetailView">
 
     <com.cengalabs.flatui.views.FlatTextView
         android:id="@+id/timeRangeTextView"

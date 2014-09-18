@@ -58,11 +58,10 @@
         </LinearLayout>
 
         <!--TODO : change id to currentOrNext-->
-        <fragment
-            android:id="@+id/currentEventDetailFragment"
-            android:name="tr.com.aliok.meetingroomkiosk.android.fragments.EventDetailFragment"
+        <tr.com.aliok.meetingroomkiosk.android.components.EventDetailView
+            android:id="@+id/currentOrNextEventDetailView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

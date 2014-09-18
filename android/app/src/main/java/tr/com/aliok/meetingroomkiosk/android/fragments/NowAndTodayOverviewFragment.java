@@ -17,6 +17,7 @@ import java.util.List;
 import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.components.BlinkingTextView;
 import tr.com.aliok.meetingroomkiosk.android.components.CountDownTextView;
+import tr.com.aliok.meetingroomkiosk.android.components.EventDetailView;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
 
 import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
@@ -40,7 +41,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
     private FlatTextView mCurrentOrNextEventBannerTextView;
     private CountDownTextView mCountDownTextView;
     private BlinkingTextView mOnAirTextView;
-    private View mCurrentEventDetailFragment;
+    private EventDetailView mCurrentOrNextEventDetailView;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,7 +83,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
         this.mCurrentOrNextEventBannerTextView = (FlatTextView) view.findViewById(R.id.currentOrNextEventBannerTextView);
         this.mCountDownTextView = (CountDownTextView) view.findViewById(R.id.countDownTextView);
         this.mOnAirTextView = (BlinkingTextView) view.findViewById(R.id.onAirTextView);
-        this.mCurrentEventDetailFragment = view.findViewById(R.id.currentEventDetailFragment);
+        this.mCurrentOrNextEventDetailView = (EventDetailView) view.findViewById(R.id.currentOrNextEventDetailView);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
                 // TODO: display "no upcoming event"
 
                 // hide event detail fragment for current or next event
-                mCurrentEventDetailFragment.setVisibility(View.GONE);
+                mCurrentOrNextEventDetailView.setVisibility(View.GONE);
 
                 // update banner text and style
                 mCurrentOrNextEventBannerTextView.setText(getResources().getText(R.string.no_session_in_progress));
@@ -143,7 +144,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
                 // TODO: display next event details
 
                 // show event detail fragment
-                mCurrentEventDetailFragment.setVisibility(View.VISIBLE);
+                mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
 
                 // update banner text and style
                 mCurrentOrNextEventBannerTextView.setText(getResources().getText(R.string.next_session));
@@ -162,8 +163,8 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
             // TODO display current event details
 
             // show event detail fragment
-            mCurrentEventDetailFragment.setVisibility(View.VISIBLE);
-//            mCurrentEventDetailFragment.updateFragmentWithEvent(currentEvent);
+            mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
+            mCurrentOrNextEventDetailView.updateFragmentWithEvent(currentEvent);
 
             // update banner text and style
             mCurrentOrNextEventBannerTextView.setText(getResources().getText(R.string.session_in_progress));
