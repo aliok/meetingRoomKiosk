@@ -123,7 +123,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
             if (CollectionUtils.isEmpty(upcomingEvents)) {
                 // TODO: display "no upcoming event"
 
-                // hide event detail fragment for current or next event
+                // hide event detail view for current or next event
                 mCurrentOrNextEventDetailView.setVisibility(View.GONE);
 
                 // update banner text and style
@@ -141,9 +141,9 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
 
             } else {
                 final Event nextEvent = upcomingEvents.get(0);      // they're already sorted, get the first one
-                // TODO: display next event details
-
-                // show event detail fragment
+                // display next event details
+                mCurrentOrNextEventDetailView.updateFragmentWithEvent(nextEvent);
+                // show event detail view
                 mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
 
                 // update banner text and style
@@ -160,11 +160,10 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
                 mOnAirTextView.stopBlinking();
             }
         } else {
-            // TODO display current event details
-
-            // show event detail fragment
-            mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
+            // display current event details
             mCurrentOrNextEventDetailView.updateFragmentWithEvent(currentEvent);
+            // show event detail view
+            mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
 
             // update banner text and style
             mCurrentOrNextEventBannerTextView.setText(getResources().getText(R.string.session_in_progress));

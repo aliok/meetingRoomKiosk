@@ -57,7 +57,6 @@
                 flatui:fl_theme="@array/blood" />
         </LinearLayout>
 
-        <!--TODO : change id to currentOrNext-->
         <tr.com.aliok.meetingroomkiosk.android.components.EventDetailView
             android:id="@+id/currentOrNextEventDetailView"
             android:layout_width="match_parent"

@@ -36,7 +36,13 @@
                             "firstName": "Rene",
                             "lastName": "Gunther",
                             "email": "rene@example.com",
-                            "attendeeStatus": "ACCEPTED"
+                            "attendeeStatus": "REJECTED"
+                        },
+                        {
+                            "firstName": "Sara",
+                            "lastName": "Lindenmann",
+                            "email": "sara@example.com",
+                            "attendeeStatus": "OPTIONAL"
                         }
                     ]
                 },
