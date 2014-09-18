@@ -249,6 +249,9 @@ public class OverviewActivity extends FragmentActivity implements
             } else if (PeriodType.DAY.equals(periodSchedule.getPeriod().getPeriodType())) {
                 // extract day schedule
 
+                currentEvent = null;
+                upcomingEvents = null;
+
                 final Date now = DeLorean.now();
                 final List<Event> eventsOfToday = periodSchedule.getSchedule().getEvents();
                 final List<Event> eventsStartAfterNow = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
@@ -341,7 +344,6 @@ public class OverviewActivity extends FragmentActivity implements
 
 
             refresh();
-            Toast.makeText(this, "Advanced time to " + DeLorean.now(), Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -354,8 +356,11 @@ public class OverviewActivity extends FragmentActivity implements
 
     @Override
     public void refresh() {
-        if (Constants.MOCK_DATA)
+        if (Constants.MOCK_DATA){
             DeLorean.advanceTime();
+            Toast.makeText(this, "Advanced time to " + DeLorean.now(), Toast.LENGTH_SHORT).show();
+        }
+
 
         // refresh views with current scheduleInformation. do not fetch the data again immediately. do it in the background.
 

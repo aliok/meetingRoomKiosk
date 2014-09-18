@@ -44,7 +44,7 @@ public class DeLorean {
         }
     }
 
-    private static int frozenTimeIndex = 1;
+    private static int frozenTimeIndex = 0;
     private static long frozenTime = DATETIME_MAP.get(frozenTimeIndex);
 
     public static long nowMs() {
