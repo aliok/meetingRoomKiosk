@@ -11,6 +11,7 @@ import tr.com.aliok.meetingroomkiosk.server.manager.SensorManager;
 import tr.com.aliok.meetingroomkiosk.server.model.Display;
 import tr.com.aliok.meetingroomkiosk.server.model.Room;
 import tr.com.aliok.meetingroomkiosk.server.model.Sensor;
+import tr.com.aliok.meetingroomkiosk.server.model.dto.SensorSettings;
 
 /**
  * Provides non-application-logic related functions for client devices.
@@ -61,9 +62,9 @@ public class RegistrationService {
     }
 
     @RequestMapping("/registerSensor")
-    public String registerSensor(@RequestParam(value = "sensorKey", required = true) String sensorKey,
-                                 @RequestParam(value = "password", required = true) String password,
-                                 @RequestParam(value = "roomKey", required = true) String roomKey) {
+    public SensorSettings registerSensor(@RequestParam(value = "sensorKey", required = true) String sensorKey,
+                                         @RequestParam(value = "password", required = true) String password,
+                                         @RequestParam(value = "roomKey", required = true) String roomKey) {
         // check if roomId is valid
         final Room room = roomManager.findByKey(roomKey);
         Validate.notNull(room);
@@ -72,7 +73,8 @@ public class RegistrationService {
         Validate.notNull(sensor);
 
         // return the token
-        return sensorManager.registerSensor(sensor, room);
+        final String token = sensorManager.registerSensor(sensor, room);
+        return new SensorSettings(token, sensor);
     }
 
     @RequestMapping("/isSensorTokenValid")
@@ -90,6 +92,7 @@ public class RegistrationService {
     }
 
     // TODO: implement with go-live
+    // use heartbeats from the sensor
 //    public boolean isSensorForDisplayOnline(){
 //
 //    }

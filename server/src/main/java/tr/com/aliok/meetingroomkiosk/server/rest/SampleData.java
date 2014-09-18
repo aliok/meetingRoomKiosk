@@ -174,6 +174,9 @@ public class SampleData {
     public final Sensor sensor1 = new Sensor.Builder()
             .setRoom(room1)
             .setSensorKey("SENSOR1")
+            .setThreshold1(300)
+            .setThreshold2(150)
+            .setSecondsToIgnoreSameEvents(5)
             .create();
 
     public final Display display1 = new Display.Builder()

@@ -12,7 +12,9 @@ public class SensorManagerImpl implements SensorManager {
 
     @Override
     public Sensor findBySensorKeyAndPassword(String sensorKey, String password) {
-        return sampleData.sensor1;
+        if (sampleData.sensor1.getSensorKey().equals(sensorKey) && "admin".equals(password))
+            return sampleData.sensor1;
+        return null;
     }
 
     @Override
