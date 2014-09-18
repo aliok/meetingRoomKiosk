@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
@@ -62,6 +63,13 @@ public class OverviewActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // these flags allows activity to run without passing the key lock
+        // see http://stackoverflow.com/questions/2993146/android-wakelock-and-keyguard
+        // they're not sent in SettingsActivity to make sure settings are only changeable by device owner
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+
         setContentView(R.layout.activity_overview);
 
         // Converts the default values (radius, size, border) to dp to be compatible with different
@@ -152,6 +160,7 @@ public class OverviewActivity extends FragmentActivity implements
 
     @Override
     protected void onResume() {
+        // TODO: receive special parameter from GcmIntentService about the GCM message
         super.onResume();
 
         // Check device for Play Services APK.

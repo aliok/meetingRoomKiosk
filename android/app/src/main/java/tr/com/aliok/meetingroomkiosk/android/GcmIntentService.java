@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -24,7 +25,6 @@ import static tr.com.aliok.meetingroomkiosk.android.Constants.TAG;
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
-    NotificationCompat.Builder builder;
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -45,24 +45,28 @@ public class GcmIntentService extends IntentService {
              * not interested in, or that you don't recognize.
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
+                // only send notification in case of problem
                 sendNotification("Send error: " + extras.toString());
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
+                // only send notification in case of problem
                 sendNotification("Deleted messages on server: " + extras.toString());
-                // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // This loop represents the service doing some work.
-                for (int i = 0; i < 5; i++) {
-                    Log.i(TAG, "Working... " + (i + 1)
-                            + "/5 @ " + SystemClock.elapsedRealtime());
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
-                // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
-                Log.i(TAG, "Received: " + extras.toString());
+                // If it's a regular GCM message, do some work.
+                Log.i(TAG, "Received GCM message " + extras.toString());
+
+                // turn device screen on. even though this method is deprecated, I couldn't find another way
+                // see http://stackoverflow.com/questions/2891337/turning-on-screen-programmatically
+                PowerManager.WakeLock screenLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(
+                        PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "tr.com.aliok.meetingRoomKiosk.screenLock");
+                screenLock.acquire();
+
+                // for following to work, we need to set launchMode of activity to singleTask.
+                // see http://stackoverflow.com/questions/11372943/issue-in-calling-activity-from-the-intentservice-class
+                // TODO: send special parameter to OverviewActivity about the GCM message
+                startActivity(new Intent(this, OverviewActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+
+                // we no longer want to keep the screen on. since activity is shown, it is up to user now...
+                screenLock.release();
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
