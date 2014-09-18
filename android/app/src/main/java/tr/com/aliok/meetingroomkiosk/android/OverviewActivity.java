@@ -7,8 +7,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -63,6 +65,10 @@ public class OverviewActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // this is required for displaying the "loading circle" on action bar
+        // see http://stackoverflow.com/questions/20280843/android-progress-bar-under-actionbar-and-remove-circle-progress
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
         // these flags allows activity to run without passing the key lock
         // see http://stackoverflow.com/questions/2993146/android-wakelock-and-keyguard
@@ -187,21 +193,38 @@ public class OverviewActivity extends FragmentActivity implements
     private void fetchScheduleInformation() {
         // fetch it in the background
 
+        // display action bar loading circle
+        setProgressBarIndeterminateVisibility(Boolean.TRUE);
+
+
         final String serverToken = SharedPrefsUtils.getServerToken(getApplication());
         new AsyncTask<Void, Void, ScheduleInformation>() {
             @Override
             protected ScheduleInformation doInBackground(Void... voids) {
-                return serviceContext.getScheduleService().getSchedule(serverToken);
+                try {
+                    return serviceContext.getScheduleService().getSchedule(serverToken);
+                } catch (RuntimeException e) {
+                    Toast.makeText(OverviewActivity.this, R.string.unable_to_fetch_schedule, Toast.LENGTH_LONG).show();
+                    Log.e(Constants.TAG, "Unable to fetch schedule", e);
+                    // hide action bar loading circle
+                    setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                    return null;
+                }
             }
 
             @Override
             protected void onPostExecute(ScheduleInformation scheduleInformation) {
+                if (scheduleInformation == null)
+                    return;
+
                 OverviewActivity.this.scheduleInformation = scheduleInformation;
                 extractDataFromScheduleInformation();
 
                 // TODO: go to week tab if there is nothing today (no upcoming events and no current even)
 
                 notifyFragmentWithDataArrivalIfTheyAreAttached();
+                // hide action bar loading circle
+                setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
             }
         }.execute(null, null, null);
@@ -209,6 +232,11 @@ public class OverviewActivity extends FragmentActivity implements
     }
 
     private void extractDataFromScheduleInformation() {
+        if (scheduleInformation == null) {
+            // don't clear existing data
+            return;
+        }
+
         for (PeriodSchedule periodSchedule : scheduleInformation.getPeriodSchedules()) {
             // extract week schedule
 

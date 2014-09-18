@@ -63,7 +63,9 @@ public class GcmIntentService extends IntentService {
                 // for following to work, we need to set launchMode of activity to singleTask.
                 // see http://stackoverflow.com/questions/11372943/issue-in-calling-activity-from-the-intentservice-class
                 // TODO: send special parameter to OverviewActivity about the GCM message
-                startActivity(new Intent(this, OverviewActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                final Intent overviewIntent = new Intent(this, OverviewActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                overviewIntent.putExtra();
+                startActivity(overviewIntent);
 
                 // we no longer want to keep the screen on. since activity is shown, it is up to user now...
                 screenLock.release();
