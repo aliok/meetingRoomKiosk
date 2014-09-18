@@ -1,18 +1,44 @@
 # coding=utf-8
+import logging
+
+import requests
+
+from meetingroomkiosk.constants import Constants
+from meetingroomkiosk.credentials import Credentials
+from meetingroomkiosk.server_info import SensorInfo
+
 
 __author__ = 'ali ok'
 
+log = logging.getLogger(__name__)
+
 
 class RegistrationService:
-    # TODO: document me
     """
+    Provides services for getting sensor configuration to be used in the program.
     """
-
 
     def __init__(self):
         pass
 
     def get_sensor_info_sync(self):
-        # TODO read the credentials and some other information from a file
-        # TODO
-        pass
+        """
+        Sends a synchronous request to server about passed event.
+        """
+
+        # read the credentials and some other information from a file : credentials.py
+        # very short timeout!
+        # do it in synchronously
+
+        payload = {
+            'sensorKey': Credentials.SENSOR_KEY,
+            'password': Credentials.PASSWORD,
+            'roomKey': Credentials.ROOM_KEY}
+
+        response = requests.get(Credentials.SERVER_END_POINT + "/registerSensor", params=payload,
+                                timeout=Constants.REQUEST_REGISTRATION_TIMEOUT)
+        response.raise_for_status()
+        json = response.json()
+        log.info("Registered successfully : " + str(json))
+
+        return SensorInfo(json)

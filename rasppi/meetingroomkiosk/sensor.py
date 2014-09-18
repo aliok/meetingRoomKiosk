@@ -16,7 +16,8 @@ from meetingroomkiosk.sensor_service_mock import SensorServiceMock
 
 __author__ = 'ali ok'
 
-MOCK_DATA = True
+MOCK_DATA = False
+MOCK_HEARTBEAT = True
 MOCK_HARDWARE = True
 
 # have rolling log files
@@ -80,14 +81,17 @@ class Sensor:
 
             self._hardware = Hardware()
 
+        if MOCK_HEARTBEAT:
+            self._heartbeat = HeartbeatMock()
+        else:
+            self._heartbeat = Heartbeat()
+
         if MOCK_DATA:
             self._sensor_service = SensorServiceMock()
             self._registration_service = RegistrationServiceMock()
-            self._heartbeat = HeartbeatMock()
         else:
             self._sensor_service = SensorService()
             self._registration_service = RegistrationService()
-            self._heartbeat = Heartbeat()
 
     @staticmethod
     def _current_time_in_millis():

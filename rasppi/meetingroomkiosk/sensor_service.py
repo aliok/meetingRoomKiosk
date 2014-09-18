@@ -1,6 +1,14 @@
 # coding=utf-8
+import logging
+
+import requests
+
+from meetingroomkiosk.constants import Constants
+from meetingroomkiosk.credentials import Credentials
 
 __author__ = 'ali ok'
+
+log = logging.getLogger(__name__)
 
 
 class SensorService:
@@ -15,16 +23,20 @@ class SensorService:
         """
         Sends a synchronous request to server about passed event.
         """
-        # TODO : fill
-
         # check token existence first
         if not self._token:
             raise Exception("No token set!")
 
-        # TODO: very short timeout!
-        # TODO: make short timeout application wide
-        # TODO: do it in synchronously
-        pass
+        # very short timeout!
+        # do it in synchronously
+
+        payload = {'token': self._token, 'eventType': event_type}
+        response = requests.get(Credentials.SERVER_END_POINT + "/notifySensorEvent", params=payload,
+                                timeout=Constants.REQUEST_BROADCAST_TIMEOUT * 10)
+        response.raise_for_status()
+
+        # no result is returned since server notifies display asynchronously
+        log.info("Message broadcasted successfully! " + str(payload))
 
     def set_token(self, token):
         self._token = token
