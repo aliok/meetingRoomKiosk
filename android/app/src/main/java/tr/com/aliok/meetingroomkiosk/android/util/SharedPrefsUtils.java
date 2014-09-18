@@ -56,7 +56,7 @@ public class SharedPrefsUtils {
     public static void storeRegistrationId(Application application, String regId) {
         final SharedPreferences prefs = getSharedPreferences(application.getApplicationContext());
         int appVersion = AppUtils.getAppVersion(application.getApplicationContext());
-        Log.i(TAG, "Saving regId on app version " + appVersion);
+        Log.i(TAG, "Saving regId on app version " + appVersion + " " + regId);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_GCM_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
