@@ -5,6 +5,9 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import tr.com.aliok.meetingroomkiosk.server.Constants;
 import tr.com.aliok.meetingroomkiosk.server.model.Display;
 import tr.com.aliok.meetingroomkiosk.server.service.model.DisplayMessageData;
@@ -32,16 +35,24 @@ public class GoogleCloudMessagingServicesImpl implements GoogleCloudMessagingSer
         message.setRegistration_ids(new String[]{display.getGcmRegistrationId()});
         message.setData(new DisplayMessageData(eventType));
 
-        final GoogleCloudMessageResponse response = googleCloudMessagingRestClient.sendMessage(message);
-
-        for (GoogleCloudMessageResponseResult result : response.getResults()) {
-            final String registration_id = result.getRegistration_id();
-            final String message_id = result.getMessage_id();
-            final String error = result.getError();
-            if (StringUtils.isNotBlank(error)) {
-                logger.error("Error pushing message. DeviceRegistrationId: " + registration_id + ", messageId: " + message_id + ", error:" + error);
+        googleCloudMessagingRestClient.sendMessage(message, new Callback<GoogleCloudMessageResponse>() {
+            @Override
+            public void success(GoogleCloudMessageResponse googleCloudMessageResponse, Response response) {
+                for (GoogleCloudMessageResponseResult result : googleCloudMessageResponse.getResults()) {
+                    final String registration_id = result.getRegistration_id();
+                    final String message_id = result.getMessage_id();
+                    final String error = result.getError();
+                    if (StringUtils.isNotBlank(error)) {
+                        logger.error("Error pushing message. DeviceRegistrationId: " + registration_id + ", messageId: " + message_id + ", error:" + error);
+                    }
+                }
             }
-        }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                logger.error("Error sending GCM message", retrofitError);
+            }
+        });
 
     }
 }

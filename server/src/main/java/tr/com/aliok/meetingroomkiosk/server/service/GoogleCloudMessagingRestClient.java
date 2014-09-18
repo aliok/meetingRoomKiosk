@@ -1,5 +1,6 @@
 package tr.com.aliok.meetingroomkiosk.server.service;
 
+import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.POST;
 import tr.com.aliok.meetingroomkiosk.server.service.model.GoogleCloudMessage;
@@ -11,6 +12,6 @@ import tr.com.aliok.meetingroomkiosk.server.service.model.GoogleCloudMessageResp
 public interface GoogleCloudMessagingRestClient {
 
     @POST("/gcm/send")
-    public GoogleCloudMessageResponse sendMessage(@Body GoogleCloudMessage googleCloudMessage);
+    public void sendMessage(@Body GoogleCloudMessage googleCloudMessage, Callback<GoogleCloudMessageResponse> callback);
 
 }
