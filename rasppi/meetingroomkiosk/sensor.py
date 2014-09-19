@@ -5,13 +5,13 @@ import logging.config
 import sys
 import time
 
-from meetingroomkiosk.constants import Constants
-from meetingroomkiosk.heartbeat import Heartbeat
-from meetingroomkiosk.heartbeat_mock import HeartbeatMock
-from meetingroomkiosk.registration_service import RegistrationService
-from meetingroomkiosk.registration_service_mock import RegistrationServiceMock
-from meetingroomkiosk.sensor_service import SensorService
-from meetingroomkiosk.sensor_service_mock import SensorServiceMock
+from constants import Constants
+from heartbeat import Heartbeat
+from heartbeat_mock import HeartbeatMock
+from registration_service import RegistrationService
+from registration_service_mock import RegistrationServiceMock
+from sensor_service import SensorService
+from sensor_service_mock import SensorServiceMock
 
 
 __author__ = 'ali ok'
@@ -73,11 +73,11 @@ class Sensor:
 
     def __init__(self):
         if MOCK_HARDWARE:
-            from meetingroomkiosk.hardware_mock import HardwareMock
+            from hardware_mock import HardwareMock
 
             self._hardware = HardwareMock()
         else:
-            from meetingroomkiosk.hardware import Hardware
+            from hardware import Hardware
 
             self._hardware = Hardware()
 

@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 import time
-from meetingroomkiosk.server_info import SensorInfo
+from server_info import SensorInfo
 
 __author__ = 'ali ok'
 

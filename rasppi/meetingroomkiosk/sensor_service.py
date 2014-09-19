@@ -3,8 +3,8 @@ import logging
 
 import requests
 
-from meetingroomkiosk.constants import Constants
-from meetingroomkiosk.credentials import Credentials
+from constants import Constants
+from credentials import Credentials
 
 __author__ = 'ali ok'
 

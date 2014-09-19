@@ -3,9 +3,9 @@ import logging
 
 import requests
 
-from meetingroomkiosk.constants import Constants
-from meetingroomkiosk.credentials import Credentials
-from meetingroomkiosk.server_info import SensorInfo
+from constants import Constants
+from credentials import Credentials
+from server_info import SensorInfo
 
 
 __author__ = 'ali ok'
