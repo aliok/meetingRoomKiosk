@@ -196,12 +196,12 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
             mUpcomingEventsAgendaView.setVisibility(View.VISIBLE);
         }
 
-        // TODO refresh view when countdown is finished
-        // TODO best way : creating a countdown component which notifies parent when countdown == 00:00:00
+
     }
 
     @Override
     public void onCountDownFinished(CountDownTextView countDownTextView) {
+        // refresh view when countdown is finished
         activityContract.refresh();
     }
 

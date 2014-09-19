@@ -14,7 +14,7 @@ import tr.com.aliok.meetingroomkiosk.android.R;
  */
 public class BlinkingTextView extends FlatTextView {
 
-    // TODO: does this one keep working when activity is in the background?
+    // TODO: GO-LIVE does this one keep working when activity is in the background?
     // we don't want it to blink if display is switched off
     // same goes with countdown component
 

@@ -59,8 +59,7 @@ public class DayAgendaView extends FrameLayout {
     }
 
     public void updateViewWithEvents(SortedSet<Event> events) {
-        //TODO
-        // TODO: show 2 lines for each event
+        // show 2 lines for each event
         // 1st line : time and title
         // 2nd line : organizer
         // TODO: on title click, trigger listener

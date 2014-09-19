@@ -41,8 +41,8 @@ public class SettingsActivity extends Activity {
     private TextView mSensorIdTextView;
     private TextView mSensorRoomIdTextView;
 
-    // TODO s:
-    // 1. do not store username and password
+    // TODOs:
+    // 1. TODO: GO-LIVE do not store username and password
 
 
     @Override
@@ -82,7 +82,7 @@ public class SettingsActivity extends Activity {
             serviceContext = ServiceContext.build(SharedPrefsUtils.getServerEndpoint(getApplication()));
     }
 
-    //TODO check internet connection on resume
+    //TODO GO-LIVE check internet connection on resume
 
     @Override
     protected void onResume() {

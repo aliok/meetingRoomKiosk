@@ -182,6 +182,8 @@ public class WeekCalendarFragment extends Fragment {
     private void doRefreshViewWithDataFromActivity() {
         final PeriodSchedule weekSchedule = activityContract.getWeekSchedule();
 
+        // TODO: GO-LIVE clear all displayed events first!!!
+
         // perhaps the fragment is created but the data request of activity is not done yet!
         // so, check if activity received the data
         if (weekSchedule != null) {
@@ -202,7 +204,7 @@ public class WeekCalendarFragment extends Fragment {
                 addEvent(event);
             }
         } else {
-            // TODO should we display "no events" ?
+            // do nothing
         }
     }
 
@@ -228,7 +230,7 @@ public class WeekCalendarFragment extends Fragment {
 
         // ---------------- set data and the listener -----------------------//
         flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventTitle());
-        // TODO listener
+        // TODO add listener to call on event click
 
         // ---------------- set location and size -----------------------//
 

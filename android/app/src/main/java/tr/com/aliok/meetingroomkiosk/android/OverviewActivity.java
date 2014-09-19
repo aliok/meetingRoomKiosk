@@ -60,7 +60,7 @@ public class OverviewActivity extends FragmentActivity implements
     private WeekCalendarFragment mWeekCalendarFragment;
     private NowAndTodayOverviewFragment mNowAndTodayOverviewFragment;
 
-    // TODO check internet connection on resume
+    // TODO GO-LIVE check internet connection on resume
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -168,7 +168,7 @@ public class OverviewActivity extends FragmentActivity implements
 
     @Override
     protected void onResume() {
-        // TODO: receive special parameter from GcmIntentService about the GCM message
+        // TODO: GO-LIVE receive special parameter from GcmIntentService about the GCM message. see GcmIntentService
         super.onResume();
         Log.d(TAG, "Resuming OverviewActivity");
 
@@ -222,7 +222,7 @@ public class OverviewActivity extends FragmentActivity implements
                 OverviewActivity.this.scheduleInformation = scheduleInformation;
                 extractDataFromScheduleInformation();
 
-                // TODO: go to week tab if there is nothing today (no upcoming events and no current even)
+                // TODO: go to week tab if there is nothing today (no upcoming events and no current event)
 
                 notifyFragmentWithDataArrivalIfTheyAreAttached();
                 // hide action bar loading circle
@@ -313,10 +313,10 @@ public class OverviewActivity extends FragmentActivity implements
     }
 
     private void checkSensorInTheBackground() {
-        //TODO : fetch data from server and see if there is an assigned sensor!
-        //TODO: do it async
-        //TODO: if there is no sensor assigned, display a modal dialog with red text
-        //TODO what about reading sensor's alive status?
+        //TODO: GO-LIVE fetch data from server and see if there is an assigned sensor!
+        //TODO: GO-LIVE do it async
+        //TODO: GO-LIVE if there is no sensor assigned, display a modal dialog with red text
+        //TODO: GO-LIVE what about reading sensor's alive status?
     }
 
     @Override
