@@ -16,8 +16,7 @@
         android:layout_marginTop="0dp"
         android:text="@string/upcoming_events"
         android:textSize="30sp"
-        flatui:fl_textColor="darker"
-        flatui:fl_theme="@array/snow" />
+        android:textColor="@android:color/darker_gray" />
 
     <GridLayout
         android:id="@+id/eventsGridLayout"

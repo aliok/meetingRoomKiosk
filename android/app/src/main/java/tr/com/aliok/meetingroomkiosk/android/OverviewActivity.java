@@ -187,9 +187,12 @@ public class OverviewActivity extends FragmentActivity implements
 
     @Override
     public void onEventSelected(Event event) {
-        // TODO display event detail in a dialog
-        // TODO reuse EventDetailView
-        return;
+        Log.d(Constants.TAG, "Event selected " + event.getEventKey());
+        // EventDetailActivity is a dialog by default.
+        // display event detail in a dialog
+        final Intent intent = new Intent(this, EventDetailActivity.class);
+        intent.putExtra(EventDetailActivity.EXTRA_EVENT, event);
+        startActivity(intent);
     }
 
     private void fetchScheduleInformation() {
@@ -267,7 +270,7 @@ public class OverviewActivity extends FragmentActivity implements
                     }
                 }
 
-                if(currentEvent!=null)
+                if (currentEvent != null)
                     eventsStartAfterNow.remove(currentEvent);
                 upcomingEvents = eventsStartAfterNow;
             } else {

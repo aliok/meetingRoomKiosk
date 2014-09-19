@@ -40,19 +40,28 @@
             android:parentActivityName=".OverviewActivity" >
         </activity>
 
-        <!--launchMode : see http://stackoverflow.com/questions/11372943/issue-in-calling-activity-from-the-intentservice-class-->
-        <!--  otherwise GcmIntentService cannot start the activity-->
-        <!--screenOrientation : force landscape-->
+        <!-- launchMode : see http://stackoverflow.com/questions/11372943/issue-in-calling-activity-from-the-intentservice-class -->
+        <!-- otherwise GcmIntentService cannot start the activity -->
+        <!-- screenOrientation : force landscape -->
         <activity
             android:name=".OverviewActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".EventDetailActivity"
+            android:label="@string/title_activity_event_detail"
+            android:parentActivityName=".OverviewActivity"
+            android:theme="@android:style/Theme.Holo.Light.Dialog">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="tr.com.aliok.meetingroomkiosk.android.OverviewActivity" />
         </activity>
     </application>
 
