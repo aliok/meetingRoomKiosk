@@ -1,6 +1,7 @@
 package tr.com.aliok.meetingroomkiosk.android.components;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -62,33 +63,44 @@ public class DayAgendaView extends FrameLayout {
         // show 2 lines for each event
         // 1st line : time and title
         // 2nd line : organizer
-        // TODO: on title click, trigger listener
         this.mEventsGridLayout.removeAllViews();
         this.mEventsGridLayout.setRowCount(events.size() * 2);
         this.mEventsGridLayout.setColumnCount(2);
 
         int i = 0;
-        for (Event event : events) {
+        for (final Event event : events) {
             // add the time column
             {
-                final FlatTextView attendeeNameTextView = createFlatTextView(15, FlatUI.GRASS);
-                attendeeNameTextView.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()));
-                attendeeNameTextView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i*2), GridLayout.spec(0)));
-                this.mEventsGridLayout.addView(attendeeNameTextView, 0);
+                final FlatTextView textView = createFlatTextView(15, FlatUI.GRASS);
+                textView.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()));
+                textView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i * 2), GridLayout.spec(0)));
+                this.mEventsGridLayout.addView(textView, 0);
             }
             // add the title column
             {
-                final FlatTextView attendeeNameTextView = createFlatTextView(20, FlatUI.SEA);
-                attendeeNameTextView.setText(event.getEventTitle());
-                attendeeNameTextView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i*2), GridLayout.spec(1)));
-                this.mEventsGridLayout.addView(attendeeNameTextView, 0);
+                final FlatTextView textView = createFlatTextView(20, FlatUI.GRASS);
+                textView.setText(event.getEventTitle());
+                textView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i * 2), GridLayout.spec(1)));
+
+                textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                textView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (eventSelectionListener != null) {
+                            eventSelectionListener.onEventSelected(event);
+                        }
+                    }
+                });
+
+                this.mEventsGridLayout.addView(textView, 0);
+
             }
             // add the organizer column
             {
-                final FlatTextView attendeeNameTextView = createFlatTextView(15, FlatUI.SEA);
-                attendeeNameTextView.setText(event.getOrganizer().getFirstName() + " " + event.getOrganizer().getLastName());
-                attendeeNameTextView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i*2 + 1), GridLayout.spec(1)));
-                this.mEventsGridLayout.addView(attendeeNameTextView, 0);
+                final FlatTextView textView = createFlatTextView(15, FlatUI.SEA);
+                textView.setText(event.getOrganizer().getFirstName() + " " + event.getOrganizer().getLastName());
+                textView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i * 2 + 1), GridLayout.spec(1)));
+                this.mEventsGridLayout.addView(textView, 0);
             }
 
             i++;
@@ -104,6 +116,10 @@ public class DayAgendaView extends FrameLayout {
 
         textView.onThemeChange();       // need to trigger this one to make sure FlatTextView reads attributes set!
         return textView;
+    }
+
+    public void setEventSelectionListener(EventSelectionListener eventSelectionListener) {
+        this.eventSelectionListener = eventSelectionListener;
     }
 
     public interface EventSelectionListener {
