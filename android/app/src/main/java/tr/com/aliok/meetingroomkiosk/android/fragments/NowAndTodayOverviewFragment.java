@@ -74,7 +74,13 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
         // this is the moment to bind components, not before
         bindComponents(view);
 
-
+        // on event click within agenda, propagate event click to activity
+        this.mUpcomingEventsAgendaView.setEventSelectionListener(new DayAgendaView.EventSelectionListener() {
+            @Override
+            public void onEventSelected(Event event) {
+                activityContract.onEventSelected(event);
+            }
+        });
         this.mCountDownTextView.setCountDownListener(this);
 
         doRefreshViewWithDataFromActivity();
