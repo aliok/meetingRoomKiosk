@@ -19,6 +19,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
@@ -225,7 +227,10 @@ public class OverviewActivity extends FragmentActivity implements
                 OverviewActivity.this.scheduleInformation = scheduleInformation;
                 extractDataFromScheduleInformation();
 
-                // TODO: go to week tab if there is nothing today (no upcoming events and no current event)
+                // go to week tab if there is nothing today (no upcoming events and no current event)
+                if (currentEvent == null && CollectionUtils.isEmpty(upcomingEvents)) {
+                    mViewPager.setCurrentItem(1);
+                }
 
                 notifyFragmentWithDataArrivalIfTheyAreAttached();
                 // hide action bar loading circle
