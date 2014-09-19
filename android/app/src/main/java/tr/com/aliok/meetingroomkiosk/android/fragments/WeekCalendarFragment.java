@@ -208,7 +208,7 @@ public class WeekCalendarFragment extends Fragment {
         }
     }
 
-    private void addEvent(Event event) {
+    private void addEvent(final Event event) {
         final float eventStartHourInFloat = DateTimeUtils.getHourInFloat(event.getEventStart());
         final float eventEndHourInFloat = DateTimeUtils.getHourInFloat(event.getEventEnd());
         final int dayOfWeek = DateTimeUtils.getDayOfWeekZeroIndexed(event.getEventStart());
@@ -230,7 +230,13 @@ public class WeekCalendarFragment extends Fragment {
 
         // ---------------- set data and the listener -----------------------//
         flatButton.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()) + " " + event.getEventTitle());
-        // TODO add listener to call on event click
+        // add listener to call on event click
+        flatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activityContract.onEventSelected(event);
+            }
+        });
 
         // ---------------- set location and size -----------------------//
 
