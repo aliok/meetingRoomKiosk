@@ -67,7 +67,7 @@
                 android:id="@+id/currentOrNextEventDetailView"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"/>
+                android:layout_weight="3" />
 
             <!--to be shown when there is no upcoming event for today. hidden otherwise.-->
             <com.cengalabs.flatui.views.FlatTextView
@@ -77,14 +77,20 @@
                 android:layout_weight="2"
                 android:paddingEnd="5dp"
                 android:paddingStart="5dp"
-                android:textSize="30sp"
                 android:text="@string/no_upcoming_events_today"
+                android:textSize="30sp"
                 android:visibility="gone"
-                flatui:fl_theme="@array/snow"
-                flatui:fl_textColor="darker" />
+                flatui:fl_textColor="darker"
+                flatui:fl_theme="@array/snow" />
+
+            <!--to be shown when there are upcoming events for today. hidden otherwise.-->
+            <tr.com.aliok.meetingroomkiosk.android.components.DayAgendaView
+                android:id="@+id/upcomingEventsAgendaView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

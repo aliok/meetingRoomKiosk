@@ -12,11 +12,12 @@ import com.cengalabs.flatui.views.FlatTextView;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.List;
+import java.util.SortedSet;
 
 import tr.com.aliok.meetingroomkiosk.android.R;
 import tr.com.aliok.meetingroomkiosk.android.components.BlinkingTextView;
 import tr.com.aliok.meetingroomkiosk.android.components.CountDownTextView;
+import tr.com.aliok.meetingroomkiosk.android.components.DayAgendaView;
 import tr.com.aliok.meetingroomkiosk.android.components.EventDetailView;
 import tr.com.aliok.meetingroomkiosk.android.model.Event;
 
@@ -43,6 +44,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
     private BlinkingTextView mOnAirTextView;
     private EventDetailView mCurrentOrNextEventDetailView;
     private FlatTextView mNoUpcomingEventsTextView;
+    private DayAgendaView mUpcomingEventsAgendaView;
 
     /**
      * Use this factory method to create a new instance of
@@ -86,6 +88,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
         this.mOnAirTextView = (BlinkingTextView) view.findViewById(R.id.onAirTextView);
         this.mCurrentOrNextEventDetailView = (EventDetailView) view.findViewById(R.id.currentOrNextEventDetailView);
         this.mNoUpcomingEventsTextView = (FlatTextView) view.findViewById(R.id.noUpcomingEventsTextView);
+        this.mUpcomingEventsAgendaView = (DayAgendaView) view.findViewById(R.id.upcomingEventsAgendaView);
     }
 
     @Override
@@ -115,7 +118,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
 
     private void doRefreshViewWithDataFromActivity() {
         final Event currentEvent = activityContract.getCurrentEvent();
-        final List<Event> upcomingEvents = activityContract.getUpcomingEvents();
+        final SortedSet<Event> upcomingEvents = activityContract.getUpcomingEvents();
 
         mCountDownTextView.stopCountDown();
 
@@ -141,9 +144,9 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
                 mOnAirTextView.stopBlinking();
 
             } else {
-                final Event nextEvent = upcomingEvents.get(0);      // they're already sorted, get the first one
+                final Event nextEvent = upcomingEvents.iterator().next();      // they're already sorted, get the first one
                 // display next event details
-                mCurrentOrNextEventDetailView.updateFragmentWithEvent(nextEvent);
+                mCurrentOrNextEventDetailView.updateViewWithEvent(nextEvent);
                 // show event detail view
                 mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
 
@@ -162,7 +165,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
             }
         } else {
             // display current event details
-            mCurrentOrNextEventDetailView.updateFragmentWithEvent(currentEvent);
+            mCurrentOrNextEventDetailView.updateViewWithEvent(currentEvent);
             // show event detail view
             mCurrentOrNextEventDetailView.setVisibility(View.VISIBLE);
 
@@ -184,10 +187,13 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
         // take care of right-hand-side panel : upcoming events
         if (CollectionUtils.isEmpty(upcomingEvents)) {
             // display "no upcoming events"
+            mUpcomingEventsAgendaView.setVisibility(View.GONE);
             mNoUpcomingEventsTextView.setVisibility(View.VISIBLE);
         } else {
-            // TODO display list of upcoming events
             mNoUpcomingEventsTextView.setVisibility(View.GONE);
+            //display list of upcoming events
+            mUpcomingEventsAgendaView.updateViewWithEvents(upcomingEvents);
+            mUpcomingEventsAgendaView.setVisibility(View.VISIBLE);
         }
 
         // TODO refresh view when countdown is finished
@@ -213,7 +219,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
 
         Event getCurrentEvent();
 
-        List<Event> getUpcomingEvents();
+        SortedSet<Event> getUpcomingEvents();
 
         void refresh();
     }

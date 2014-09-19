@@ -52,7 +52,7 @@ public class EventDetailView extends FrameLayout {
     private void init(Context context) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = inflater.inflate(R.layout.event_detail_view, null);
+        View view = inflater.inflate(R.layout.view_event_detail, null);
 
         // this is the moment to bind components, not before
         bindComponents(view);
@@ -69,7 +69,7 @@ public class EventDetailView extends FrameLayout {
         this.mAttendeesGridLayout = (GridLayout) view.findViewById(R.id.attendeesGridLayout);
     }
 
-    public void updateFragmentWithEvent(Event event) {
+    public void updateViewWithEvent(Event event) {
         this.mTimeRangeTextView.setText(DateTimeUtils.getTimeRangeStr(event.getEventStart(), event.getEventEnd()));
 
         this.mTitleTextView.setText(event.getEventTitle());
@@ -91,14 +91,6 @@ public class EventDetailView extends FrameLayout {
                     attendeeNameTextView.setText(attendee.getFirstName() + " " + attendee.getLastName());
                     attendeeNameTextView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i), GridLayout.spec(0)));
                     this.mAttendeesGridLayout.addView(attendeeNameTextView, 0);
-                }
-
-                // add the name column
-                {
-                    final FlatTextView attendeeEmailTextView = createFlatTextView(20, FlatUI.SEA);
-                    attendeeEmailTextView.setText(attendee.getFirstName() + " " + attendee.getLastName());
-                    attendeeEmailTextView.setLayoutParams(new GridLayout.LayoutParams(GridLayout.spec(i), GridLayout.spec(0)));
-                    this.mAttendeesGridLayout.addView(attendeeEmailTextView);
                 }
                 // add the email column
                 {

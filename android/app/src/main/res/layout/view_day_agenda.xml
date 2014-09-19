@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|start"
+    android:orientation="vertical"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    tools:context=".EventDetailView">
+
+    <com.cengalabs.flatui.views.FlatTextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="@string/upcoming_events"
+        android:textSize="30sp"
+        flatui:fl_textColor="darker"
+        flatui:fl_theme="@array/snow" />
+
+    <GridLayout
+        android:id="@+id/eventsGridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="0dp"
+        android:paddingStart="0dp"
+        android:useDefaultMargins="true" />
+
+</LinearLayout>

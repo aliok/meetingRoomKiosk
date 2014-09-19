@@ -17,11 +17,11 @@ import android.widget.Toast;
 import com.cengalabs.flatui.FlatUI;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.SortedSet;
 
 import tr.com.aliok.meetingroomkiosk.android.fragments.NowAndTodayOverviewFragment;
 import tr.com.aliok.meetingroomkiosk.android.fragments.WeekCalendarFragment;
@@ -52,7 +52,7 @@ public class OverviewActivity extends FragmentActivity implements
     // ------------ data ------------------//
     private ScheduleInformation scheduleInformation;
     private Event currentEvent;
-    private List<Event> upcomingEvents;
+    private SortedSet<Event> upcomingEvents;
     private PeriodSchedule weekPeriodSchedule;
 
     // ---- UI Components ------ //
@@ -253,7 +253,7 @@ public class OverviewActivity extends FragmentActivity implements
 
                 final Date now = DeLorean.now();
                 final List<Event> eventsOfToday = periodSchedule.getSchedule().getEvents();
-                final List<Event> eventsStartAfterNow = Lists.newArrayList(Iterables.filter(eventsOfToday, new Predicate<Event>() {
+                final SortedSet<Event> eventsStartAfterNow = Sets.newTreeSet(Iterables.filter(eventsOfToday, new Predicate<Event>() {
                     @Override
                     public boolean apply(Event input) {
                         return !now.after(input.getEventStart()); // means : now is before or equal to input.eventStart
@@ -267,9 +267,9 @@ public class OverviewActivity extends FragmentActivity implements
                     }
                 }
 
-                eventsStartAfterNow.remove(currentEvent);
+                if(currentEvent!=null)
+                    eventsStartAfterNow.remove(currentEvent);
                 upcomingEvents = eventsStartAfterNow;
-                Collections.sort(upcomingEvents);
             } else {
                 throw new IllegalStateException();
             }
@@ -338,7 +338,7 @@ public class OverviewActivity extends FragmentActivity implements
             goToSettings();
             return true;
         } else if (id == R.id.action_bttf) {
-            if (!Constants.MOCK_DATA){
+            if (!Constants.MOCK_DATA) {
                 Toast.makeText(this, "This button is for development purposes only!", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -357,7 +357,7 @@ public class OverviewActivity extends FragmentActivity implements
 
     @Override
     public void refresh() {
-        if (Constants.MOCK_DATA){
+        if (Constants.MOCK_DATA) {
             DeLorean.advanceTime();
             Toast.makeText(this, "Advanced time to " + DeLorean.now(), Toast.LENGTH_SHORT).show();
         }
@@ -376,7 +376,7 @@ public class OverviewActivity extends FragmentActivity implements
     }
 
     @Override
-    public List<Event> getUpcomingEvents() {
+    public SortedSet<Event> getUpcomingEvents() {
         return upcomingEvents;
     }
 
