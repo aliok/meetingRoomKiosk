@@ -42,6 +42,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
     private CountDownTextView mCountDownTextView;
     private BlinkingTextView mOnAirTextView;
     private EventDetailView mCurrentOrNextEventDetailView;
+    private FlatTextView mNoUpcomingEventsTextView;
 
     /**
      * Use this factory method to create a new instance of
@@ -84,6 +85,7 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
         this.mCountDownTextView = (CountDownTextView) view.findViewById(R.id.countDownTextView);
         this.mOnAirTextView = (BlinkingTextView) view.findViewById(R.id.onAirTextView);
         this.mCurrentOrNextEventDetailView = (EventDetailView) view.findViewById(R.id.currentOrNextEventDetailView);
+        this.mNoUpcomingEventsTextView = (FlatTextView) view.findViewById(R.id.noUpcomingEventsTextView);
     }
 
     @Override
@@ -117,12 +119,11 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
 
         mCountDownTextView.stopCountDown();
 
+        // take care of left-hand-side panel : current or next event
         // perhaps the fragment is created but the data request of activity is not done yet!
         // so, check if activity received the data
         if (currentEvent == null) {
             if (CollectionUtils.isEmpty(upcomingEvents)) {
-                // TODO: display "no upcoming event"
-
                 // hide event detail view for current or next event
                 mCurrentOrNextEventDetailView.setVisibility(View.GONE);
 
@@ -179,10 +180,14 @@ public class NowAndTodayOverviewFragment extends Fragment implements CountDownTe
             mOnAirTextView.startBlinking();
         }
 
+
+        // take care of right-hand-side panel : upcoming events
         if (CollectionUtils.isEmpty(upcomingEvents)) {
-            // TODO display "no upcoming events"
+            // display "no upcoming events"
+            mNoUpcomingEventsTextView.setVisibility(View.VISIBLE);
         } else {
             // TODO display list of upcoming events
+            mNoUpcomingEventsTextView.setVisibility(View.GONE);
         }
 
         // TODO refresh view when countdown is finished

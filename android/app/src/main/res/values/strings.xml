@@ -36,5 +36,6 @@
     <string name="next_session">Next session in </string>
     <string name="unable_to_fetch_schedule">Unable to fetch schedule from server.</string>
     <string name="back_to_the_future">BTTF</string>
+    <string name="no_upcoming_events_today">No upcoming events today</string>
 
 </resources>

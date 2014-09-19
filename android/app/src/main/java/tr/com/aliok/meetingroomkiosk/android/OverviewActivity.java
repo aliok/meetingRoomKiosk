@@ -60,7 +60,7 @@ public class OverviewActivity extends FragmentActivity implements
     private WeekCalendarFragment mWeekCalendarFragment;
     private NowAndTodayOverviewFragment mNowAndTodayOverviewFragment;
 
-    //TODO check internet connection on resume
+    // TODO check internet connection on resume
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -180,16 +180,15 @@ public class OverviewActivity extends FragmentActivity implements
             return;
         }
 
-        if (!checkSensor()) {
-            return;
-        }
+        checkSensorInTheBackground();
 
         fetchScheduleInformation();
     }
 
     @Override
     public void onEventSelected(Event event) {
-        // TODO
+        // TODO display event detail in a dialog
+        // TODO reuse EventDetailView
         return;
     }
 
@@ -313,9 +312,11 @@ public class OverviewActivity extends FragmentActivity implements
         return true;
     }
 
-    private boolean checkSensor() {
+    private void checkSensorInTheBackground() {
         //TODO : fetch data from server and see if there is an assigned sensor!
-        return true;
+        //TODO: do it async
+        //TODO: if there is no sensor assigned, display a modal dialog with red text
+        //TODO what about reading sensor's alive status?
     }
 
     @Override

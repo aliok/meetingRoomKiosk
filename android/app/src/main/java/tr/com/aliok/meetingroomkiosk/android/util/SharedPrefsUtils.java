@@ -64,7 +64,7 @@ public class SharedPrefsUtils {
     }
 
     public static String getServerToken(Application application) {
-        //TODO
+        //TODO implement before go-live
         if (1 == 1)
             return "asdasdadasdasdasdasdasd";
 
@@ -86,7 +86,7 @@ public class SharedPrefsUtils {
     }
 
     public static String getRoomId(Application application) {
-        //TODO
+        //TODO implement before go-live
         if (1 == 1)
             return "quartz";
 

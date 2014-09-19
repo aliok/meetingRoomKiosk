@@ -19,19 +19,19 @@
             android:layout_gravity="start|top"
             android:orientation="horizontal">
 
-            <!--TODO: change text to next session if there is no current event-->
+            <!--text is changed to next session if there is no current event-->
             <com.cengalabs.flatui.views.FlatTextView
                 android:id="@+id/currentOrNextEventBannerTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:textSize="30sp"
-                android:paddingStart="5dp"
                 android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textSize="30sp"
                 flatui:fl_backgroundColor="fl_main"
                 flatui:fl_textColor="darker" />
 
-            <!--TODO: need some code to clear the text if there is no countdown (no countdown = (no current event) and (no upcoming events today))-->
+            <!--text is cleared if there is no countdown (no countdown = (no current event) and (no upcoming events today))-->
             <tr.com.aliok.meetingroomkiosk.android.components.CountDownTextView
                 android:id="@+id/countDownTextView"
                 android:layout_width="0dp"
@@ -41,7 +41,7 @@
                 android:textSize="30sp"
                 flatui:fl_textColor="darker" />
 
-            <!--TODO: hide if there is no current event in progress-->
+            <!--hidden if there is no current event in progress-->
             <tr.com.aliok.meetingroomkiosk.android.components.BlinkingTextView
                 android:id="@+id/onAirTextView"
                 android:layout_width="0dp"
@@ -57,10 +57,34 @@
                 flatui:fl_theme="@array/blood" />
         </LinearLayout>
 
-        <tr.com.aliok.meetingroomkiosk.android.components.EventDetailView
-            android:id="@+id/currentOrNextEventDetailView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_gravity="start|top"
+            android:orientation="horizontal">
+
+            <tr.com.aliok.meetingroomkiosk.android.components.EventDetailView
+                android:id="@+id/currentOrNextEventDetailView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"/>
+
+            <!--to be shown when there is no upcoming event for today. hidden otherwise.-->
+            <com.cengalabs.flatui.views.FlatTextView
+                android:id="@+id/noUpcomingEventsTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:textSize="30sp"
+                android:text="@string/no_upcoming_events_today"
+                android:visibility="gone"
+                flatui:fl_theme="@array/snow"
+                flatui:fl_textColor="darker" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
